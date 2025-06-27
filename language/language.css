@@ -93,20 +93,19 @@ h2 {
     background-color: #222;
 }
 
-/* 선택된 버튼 스타일 ㄴㅁㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁ*/
-.language-btn.selected {
-    background-color: #FF3D00;
-    color: white;
-}
 
 /* 흐려진 버튼 스타일 (스크롤 시) */
 .language-btn.faded {
     color: #666666;
     border-color: #444444;
-    cursor: not-allowed;
     background-color: transparent;
+    cursor: pointer;
+    pointer-events: auto;
 }
-
+.language-btn.selected {
+    background-color: #FF3D00;
+    color: white;
+}
 /* 비활성화된 버튼 스타일 */
 .language-btn.disabled {
     color: #555;
