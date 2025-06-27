@@ -1,26 +1,19 @@
-/* language.css */
-
-/* 기본 스타일 및 리셋 */
-* {
-    box-sizing: border-box;
-}
-
-html, body {
+body, html {
     margin: 0;
     padding: 0;
     height: 100%;
-    background-color: #0F0F0F; /* 어두운 배경색 */
+    background-color: #0F0F0F;
     color: white;
     font-family: 'Helvetica Neue', 'Arial', sans-serif;
-    display: flex; /* 컨테이너 중앙 정렬을 위해 */
+    display: flex;
     justify-content: center;
     align-items: center;
-}
+  }
 
 /* 메인 컨테이너 스타일 */
 .Language-container {
     width: 100vw;
-    max-width: 420px; /* 전체 컨테이너 최대 너비 */
+    max-width: 402px; /* 전체 컨테이너 최대 너비 */
     height: 100dvh; /* 동적 뷰포트 높이 */
     padding: 40px 20px 20px;
     box-sizing: border-box;
@@ -33,30 +26,27 @@ h2 {
     font-weight: 700;
     font-size: 20px;
     margin: 0 0 16px 0;
-    width: 100%;
-    max-width: 344px; /* search-bar와 동일한 너비 */
-    text-align: left;
 }
 
 /* 검색 바 스타일 */
 .search-bar {
     position: relative;
-    width: 100%;
-    max-width: 344px; /* h2와 동일한 너비 */
+    max-width: 362px;
     margin-bottom: 16px;
 }
 
 .search-bar input {
     width: 100%;
-    height: 44px; /* 입력창 높이 */
-    padding: 0 12px; /* 좌우 패딩 */
-    background-color: transparent;
-    border: none;
-    border-bottom: 1px solid #424242; /* 아래쪽 테두리만 */
+    max-width: 362px;
+    height: 44px;
+    padding: 0 36px 0 12px; 
+    border: none; 
+    border-bottom: 1px solid #424242;
+    outline: none; 
+    background-color: transparent; 
     color: white;
-    font-size: 14px;
-    outline: none; /* 포커스 시 아웃라인 제거 */
-}
+    font-size: 14px; 
+  }
 
 /* 언어 리스트 컨테이너 스타일 */
 .language {
@@ -64,10 +54,8 @@ h2 {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 24px;
-    width: 100%;
-    max-width: 363px;
+    gap: 16px;
+    margin-bottom: 33px;
 
     /* 스크롤바 숨기기 */
     scrollbar-width: none; /* Firefox */
@@ -95,6 +83,7 @@ h2 {
     text-align: left;
     padding-left: 12px;
     cursor: pointer;
+    width: 362px;
     transition: background-color 0.2s;
     line-height: 44px; /* 텍스트 수직 중앙 정렬 */
     box-sizing: border-box;
@@ -126,6 +115,16 @@ h2 {
     background-color: transparent;
 }
 
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #888;
+  pointer-events: none;
+}
+
 /* Next 버튼 스타일 */
 .continue-btn {
     height: 44px;
@@ -136,8 +135,7 @@ h2 {
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;
-    width: 100%;
-    max-width: 363px; /* 언어 리스트 버튼들과 동일한 너비 */
+    max-width: 362px;
 }
 
 .continue-btn:hover {

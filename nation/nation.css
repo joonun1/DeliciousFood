@@ -13,7 +13,7 @@ body, html {
 
 .nation-container {
   width: 100vw;
-  max-width: 420px;
+  max-width: 402px;
   height: 100dvh;
   padding: 40px 20px 20px;
   box-sizing: border-box;
@@ -29,7 +29,7 @@ h2 {
 
 .search-bar {
   position: relative;
-  width: 100%;
+  max-width: 362px;
   margin-bottom: 16px;
 }
 
@@ -37,8 +37,6 @@ h2 {
   width: 100%;
   height: 44px;
   padding: 0 36px 0 12px; 
-
- 
   border: none; 
   border-bottom: 1px solid #424242;
   outline: none; 
@@ -62,8 +60,8 @@ h2 {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 16px;
+  margin-bottom: 33px;
 
   /* 스크롤바 숨기기 - Webkit 기반 브라우저 (크롬, 사파리, 엣지 등) */
   scrollbar-width: none; /* Firefox */
@@ -86,6 +84,7 @@ h2 {
   border-radius: 6px;
   color: white;
   font-size: 14px;
+  width: 362px;
   text-align: left;
   padding-left: 12px;
   cursor: pointer;
@@ -107,6 +106,7 @@ h2 {
   font-size: 16px;
   cursor: pointer;
   width: 100%;
+  max-width: 362px;
 }
 
 .continue-btn:hover {
