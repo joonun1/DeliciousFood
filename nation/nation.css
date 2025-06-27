@@ -1,0 +1,114 @@
+/* 기본 스타일 */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #0F0F0F;
+  color: white;
+  font-family: 'Helvetica Neue', 'Arial', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nation-container {
+  width: 100vw;
+  max-width: 420px;
+  height: 100dvh;
+  padding: 40px 20px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 20px;
+  margin: 0 0 16px 0;
+}
+
+.search-bar {
+  position: relative;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.search-bar input {
+  width: 100%;
+  height: 44px;
+  padding: 0 36px 0 12px; 
+
+ 
+  border: none; 
+  border-bottom: 1px solid #424242;
+  outline: none; 
+  background-color: transparent; 
+  color: white;
+  font-size: 14px; 
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #888;
+  pointer-events: none;
+}
+
+.nation-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+
+  /* 스크롤바 숨기기 - Webkit 기반 브라우저 (크롬, 사파리, 엣지 등) */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE, Edge */
+
+  /* --- 새로 추가된 부분: 스크롤 시 아래쪽만 흐려지는 효과 (mask-image) --- */
+  -webkit-mask-image: linear-gradient(to bottom, black, black calc(100% - 50px), transparent);
+  mask-image: linear-gradient(to bottom, black, black calc(100% - 50px), transparent);
+  padding-right: 10px; /* 스크롤바 공간 확보 (숨겨져도 마스크에 가려지지 않도록) */
+}
+
+.nation-list::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.nation-btn {
+  height: 44px;          /* 버튼 높이 44px */
+  background-color: transparent;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  text-align: left;
+  padding-left: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  line-height: 44px;     /* 텍스트 수직 중앙 정렬 */
+  box-sizing: border-box;
+}
+.nation-btn.selected {
+  background-color:#FF3D00; /* 선택된 버튼 배경색 (원하는 색으로 변경 가능) */
+  color: white;        
+}
+.continue-btn {
+  height: 44px;
+  background-color: #424242;
+  border-radius: 6px;
+  border: none;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.continue-btn:hover {
+  background-color: #FF3D00;
+}
