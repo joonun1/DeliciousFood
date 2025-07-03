@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Survey</title>
+  <link rel="stylesheet" href="survey.css" />
+</head>
+<body>
+  <div class="container">
+
+    <!-- 첫 페이지 -->
+    <div class="page intro-page active" id="page1">
+      <div class="text-block">
+        <div class="title">Just 5 questions<br>Before you start!</div>
+        <div class="subtitle">Fill Your Bowl with Your Favor</div>
+        <div class="bowl"><img src="/img/bowl.png" /></div>
+      </div>
+      <div class="bottom"><button class="button" onclick="nextPage(2)">Go</button></div>
+    </div>
+
+    <!-- 질문 1 -->
+    <div class="page question-page" id="page2">
+      <div class="top">
+        <div class="top-bar">
+          <span class="back" onclick="prevPage(2)">←</span>
+          <span>1 / 5</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 20%"></div></div>
+      </div>
+      <div class="content">
+        <div class="title1">What kind of meal<br>are you most excited about<br>on this trip?</div>
+        <div class="options-group">
+          <button class="option-outline">A local hidden gem</button>
+          <button class="option-outline">A trendy spot</button>
+          <button class="option-outline">Traditional dining</button>
+          <button class="option-outline">Street food</button>
+        </div>
+        <div class="bowl"><img src="/img/bowl.png" /></div>
+      </div>
+      <div class="bottom"><button class="button-gray" onclick="nextPage(3)">Next</button></div>
+    </div>
+
+    <!-- 질문 2 -->
+    <div class="page question-page" id="page3">
+      <div class="top">
+        <div class="top-bar">
+          <span class="back" onclick="prevPage(3)">←</span>
+          <span>2 / 5</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div>
+      </div>
+      <div class="content">
+        <div class="title1">How much<br>do you enjoy spicy food?</div>
+        <div class="subtitle1">Drag the plate to indicate your spice tolerance Level!</div>
+        <input type="range" min="0" max="40" value="0" class="slider" />
+        <div class="bowl1"><img src="/img/bowl1.png" /></div>
+      </div>
+      <div class="bottom"><button class="button-gray">Next</button></div>
+    </div>
+
+  </div>
+  <script src="survey.js"></script>
+</body>
+</html>
