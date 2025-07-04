@@ -83,7 +83,8 @@ h2 {
     text-align: left;
     padding-left: 12px;
     cursor: pointer;
-    width: 362px;
+    width: 100%;
+    max-width: 100%;
     transition: background-color 0.2s;
     line-height: 44px; /* 텍스트 수직 중앙 정렬 */
     box-sizing: border-box;

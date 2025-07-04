@@ -9,7 +9,7 @@ html, body {
   
   .container {
     width: 100vw;
-    max-width: 420px;
+    max-width: 402px;
     height: 100dvh;
     margin: 0 auto;
     overflow: hidden;
@@ -18,6 +18,7 @@ html, body {
   }
   
   .page {
+    position: relative;
     height: 100%;
     display: none;
     flex-direction: column;
@@ -46,20 +47,20 @@ html, body {
   }
   
   .title {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
     text-align: center;
     margin: 100px 0 10px;
   }
 
   .title1 {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
     text-align: left;
     width: 100%;
     padding-left: 10px;
     margin-top: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
   }
   
   .subtitle {
@@ -77,23 +78,20 @@ html, body {
     margin-bottom: 120px;
   }
   .bowl {
-    margin-top: 5px;
+    position: absolute;
+    bottom: 60px; /* 버튼 높이 48px + 위 여백 20px */
+    left: 50%;
+    transform: translateX(-50%);
     text-align: center;
   }
   
   .bowl img {
     max-width: 150px;
     height: auto;
+    display: block;
   }
-
-  .bowl1 {
-    margin-top: 150px;
-    text-align: center;
-  }
-  
-  .bowl1 img {
-    max-width: 150px;
-    height: auto;
+  .bottom {
+    padding-bottom: 20px;
   }
   
   .button-gray {
@@ -112,24 +110,32 @@ html, body {
   .button {
     width: 100%;
     height: 44px;
-    border-radius: 8px;
+    border-radius: 6px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     border: none;
     background-color: #FF3B30;
     color: white;
-    /* margin-top: 50px; ← 제거 */
   }
   
   .button-gray {
     background-color: #3A3A3C;
     color: white;
   }
-  
+
+  .option-outline1{
+    max-width: 75%;
+  }
+  .option-outline1,
   .option-outline {
-    width: 75%;
-    padding: 14px;
+    width: 100%;
+    height: 36px; /* ✅ 고정 높이 설정 */
+    display: flex; /* ✅ 중앙 정렬을 위한 flex 설정 */
+    align-items: center; /* ✅ 세로 중앙 정렬 */
+    justify-content: center; /* ✅ 가로 중앙 정렬 */
+  
+    padding: 0 16px; /* ✅ 좌우 여백만 주고 세로 패딩 제거 */
     font-size: 16px;
     border-radius: 24px;
     border: 1px solid #919191;
@@ -137,7 +143,15 @@ html, body {
     color: #919191;
     margin: 8px 0;
     cursor: pointer;
+    text-align: center;
   }
+
+  .option-outline:hover,
+  .option-outline1:hover{
+    background-color: #FF3D00;
+    color: white;
+  }
+  
   
   .options-group {
     width: 100%;
@@ -197,5 +211,20 @@ html, body {
   .back {
     font-size: 18px;
     cursor: pointer;
+  }
+  
+  .input-text {
+    width: 100%;
+    padding: 8px 0;
+    font-size: 14px;
+    color: white;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #555;
+    outline: none;
+    margin-bottom: 40px;
+  }
+  .input-text::placeholder {
+    color: #919191;
   }
   
