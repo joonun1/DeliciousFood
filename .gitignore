@@ -1,0 +1,6 @@
+# OS 및 전역 무시 항목
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+*.iml
