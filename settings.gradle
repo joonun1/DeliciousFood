@@ -1,0 +1,2 @@
+rootProject.name = 'DeliciousFood'
+include 'backend'
