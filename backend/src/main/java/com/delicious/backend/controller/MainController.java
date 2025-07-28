@@ -8,6 +8,6 @@ public class MainController {
 
     @GetMapping("/")
     public String index() {
-        return "forward:/index.html";
+        return "forward:/index/index.html";
     }
 }
