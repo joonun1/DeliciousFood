@@ -1,22 +1,16 @@
 spring:
   datasource:
-    url: jdbc:postgresql://db.bmjkjwifgehyaqfunkmu.supabase.co:5432/postgres?sslmode=require
-    username: postgres
-    password: hansung123!2
-
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
-    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
-    show-sql: false
     properties:
       hibernate:
         format_sql: true
-
+        show_sql: false
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-
-server:
-  port: 8080
