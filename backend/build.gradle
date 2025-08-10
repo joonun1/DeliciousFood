@@ -1,21 +1,14 @@
 plugins {
-	id 'java'
 	id 'org.springframework.boot' version '3.5.4'
-	id 'io.spring.dependency-management' version '1.1.7'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'java'
 }
 
 group = 'app'
 version = '0.0.1-SNAPSHOT'
-
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
 	}
 }
 
@@ -24,19 +17,35 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// PostGIS 공간 타입 매핑 (Hibernate 6.6.x 맞춰 사용)
+	implementation 'org.hibernate.orm:hibernate-spatial:6.6.1.Final'
+	// JTS (환경에 따라 spatial이 끌어오지만, 명시해두면 안전)
+	implementation 'org.locationtech.jts:jts-core:1.19.0'
+
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-database-postgresql'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
+
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.named('test') {
+// (선택) 혹시 하이버네이트 하위 모듈 버전이 어긋나면 한 버전으로 강제
+configurations.all {
+	resolutionStrategy.eachDependency { details ->
+		if (details.requested.group == 'org.hibernate.orm'
+				&& details.requested.name.startsWith('hibernate-')) {
+			details.useVersion '6.6.1.Final'
+		}
+	}
+}
+
+tasks.withType(Test).configureEach {
 	useJUnitPlatform()
 }
