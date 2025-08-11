@@ -38,6 +38,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+test {
+	useJUnitPlatform()
+}
 // (선택) 혹시 하이버네이트 하위 모듈 버전이 어긋나면 한 버전으로 강제
 /*configurations.all {
 	resolutionStrategy.eachDependency { details ->
