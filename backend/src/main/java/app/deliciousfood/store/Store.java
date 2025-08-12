@@ -11,19 +11,21 @@ import java.util.UUID;
 @Entity @Table(name = "stores")
 @Getter @Setter @NoArgsConstructor
 public class Store {
-    @Id @GeneratedValue @Column(columnDefinition = "uuid")
+    @Id
+    @org.hibernate.annotations.UuidGenerator
     private UUID id;
+
+    @Version Long version;
 
     @Column(nullable = false) private String name;
     private String address;
     private String description;
 
-    @Column(name="rating_avg")  private BigDecimal ratingAvg;
-    @Column(name="rating_count") private Integer ratingCount;
+    @Column(name = "rating_avg")  private BigDecimal ratingAvg;
+    @Column(name = "rating_count") private Integer ratingCount;
 
-    // Supabase: geography(Point,4326)
-    @Column(name="geom", columnDefinition = "geography(Point,4326)", nullable = false)
+    @Column(name = "geom", columnDefinition = "geography(Point,4326)", nullable = false)
     private Point location;
 
-    @Column(name="created_at") private OffsetDateTime createdAt;
+    @Column(name = "created_at") private OffsetDateTime createdAt;
 }
