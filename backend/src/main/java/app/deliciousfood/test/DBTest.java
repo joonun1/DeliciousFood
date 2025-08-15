@@ -1,4 +1,4 @@
-package app.deliciousfood.test;
+/*package app.deliciousfood.test;
 
 import app.deliciousfood.store.Store;
 import app.deliciousfood.store.StoreRepository;
@@ -40,3 +40,4 @@ public class DBTest implements CommandLineRunner{
         System.out.println("✅ Main에서 테스트 데이터 저장 완료!");
     }
 }
+*/
