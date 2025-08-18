@@ -304,5 +304,5 @@ h2 {
 .bowl-clip { position: absolute; inset: 0; z-index: 2; pointer-events: none; -webkit-mask: url('/img/Subtract.svg') center/contain no-repeat; mask: url('/img/Subtract.svg') center/contain no-repeat; }
 .bowl-front-img { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
 .ball-field { position: absolute; inset: 0; z-index: 2; pointer-events: none; -webkit-mask: url('/img/Subtract.svg') center/contain no-repeat; mask: url('/img/Subtract.svg') center/contain no-repeat; }
-.ball { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #FF3D00; z-index: 2; }
+.ball { position: absolute; width: 16px; height: 16px; background: url("/public/img/Ellipse 457.svg") no-repeat center / contain; border-radius: 0; /* 이미지 자체가 원이라면 필요 없음 */ z-index: 2; }
  
