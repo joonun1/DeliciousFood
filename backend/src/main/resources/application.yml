@@ -6,6 +6,20 @@ spring:
     url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 3     # 🔻 작게 (2~3 권장)
+      minimum-idle: 1
+      idle-timeout: 30000      # 30s
+      max-lifetime: 120000     # 120s (Supabase의 서버쪽 max보다 반드시 짧게)
+      leak-detection-threshold: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: false
 
   flyway:
     enabled: true
