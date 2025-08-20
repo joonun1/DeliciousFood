@@ -33,5 +33,11 @@ export const api = {
             body: JSON.stringify(payload),
         });
     },
+    setNation(payload) {          // { email, nation }
+        return request('/api/users/nation', {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        });
+    },
 };
 

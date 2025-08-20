@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -45,8 +46,18 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials"));
     }
 
+    @PostMapping("/nation")
+    public ResponseEntity<?> setNation(@RequestBody NationRequest req) {
+        var user = userRepository.findByEmail(req.email())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+        user.setNation(req.nation());
+        userRepository.save(user);
+        return ResponseEntity.ok(Map.of("국가가 저장 되었습니다.", true));
+    }
+
     // DTOs
     public record UserRegisterRequest(String email, String password, String name) {}
     public record UserLoginRequest(String email, String password) {}
     public record SimpleMessage(String message) {}
+    public record NationRequest(String email, String nation) {}
 }

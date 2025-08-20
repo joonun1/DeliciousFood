@@ -27,4 +27,7 @@ public class User {
 
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
+
+    @Column(name = "nation")
+    private String nation;
 }
