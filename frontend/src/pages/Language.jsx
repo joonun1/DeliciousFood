@@ -1,46 +1,58 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { api } from '../api/client'
 
-const ALL_LANGUAGES = [
-  "English", "Japanese", "Chinese", "French", "Korean", "Filipino",
-  "Thai", "Dutch", "German", "Norweigan", "Spanish", "Italy"
-]
+const LANGS = ['Korean', 'English', 'Japanese', 'Chinese', 'Spanish']
 
 export default function Language() {
-  const [query, setQuery] = useState('')
+  const nav = useNavigate()
+  const [email, setEmail] = useState('')
   const [selected, setSelected] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    return ALL_LANGUAGES.filter(l => l.toLowerCase().includes(q))
-  }, [query])
+  useEffect(() => {
+    const e = localStorage.getItem('signupEmail') || ''
+    setEmail(e)
+    if (!e) nav('/signup', { replace: true })
+  }, [nav])
+
+  const onNext = async () => {
+    if (!selected) return
+    setError(''); setSaving(true)
+    try {
+      const res = await api.setLanguage({ email, language: selected })
+      // 확인용
+      console.log('language saved:', res)
+      // 다음 페이지로
+      nav('/home') // 원하는 다음 경로
+    } catch (err) {
+      setError(err.message || '저장 중 오류가 발생했습니다.')
+    } finally {
+      setSaving(false)
+    }
+  }
 
   return (
-    <div className="page-root">
-      <div className="Language-container">
-        <h2>Your Language</h2>
-        <div className="search-bar">
-          <input type="search" id="search-input" value={query} onChange={e => setQuery(e.target.value)} />
-          <span className="search-icon">🔍</span>
+      <div className="page-root">
+        <div className="language-container">
+          <h2>Your Language</h2>
+          <div className="language-list">
+            {LANGS.map(l => (
+                <button
+                    key={l}
+                    className={`lang-btn ${selected === l ? 'selected' : ''}`}
+                    onClick={() => setSelected(l)}
+                >
+                  {l}
+                </button>
+            ))}
+          </div>
+          {error && <p className="error-text">{error}</p>}
+          <button className="button continue-btn" onClick={onNext} disabled={!selected || saving}>
+            {saving ? 'Saving...' : 'Next'}
+          </button>
         </div>
-        <div className="language">
-          {filtered.length === 0 && (
-            <p style={{ color: '#888', textAlign: 'center' }}>검색 결과가 없습니다.</p>
-          )}
-          {filtered.map(lang => (
-            <button
-              key={lang}
-              className={`language-btn ${selected === lang ? 'selected' : ''}`}
-              onClick={() => setSelected(lang)}
-            >
-              {lang}
-            </button>
-          ))}
-        </div>
-        <Link className="button continue-btn" to="/survey">Next</Link>
       </div>
-    </div>
   )
 }
-
-

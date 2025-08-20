@@ -1,6 +1,7 @@
 package app.deliciousfood.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+@Slf4j
 @RequiredArgsConstructor
 public class UserController {
 
@@ -19,6 +21,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterRequest req) {
+        log.info("register called email={}, name={}", req.email(), req.name());
         if (userRepository.findByEmail(req.email()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
         }
@@ -48,6 +51,7 @@ public class UserController {
 
     @PostMapping("/nation")
     public ResponseEntity<?> setNation(@RequestBody NationRequest req) {
+        log.info("setNation email={}, nation={}", req.email(), req.nation());
         var user = userRepository.findByEmail(req.email())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
         user.setNation(req.nation());
@@ -55,9 +59,34 @@ public class UserController {
         return ResponseEntity.ok(Map.of("국가가 저장 되었습니다.", true));
     }
 
+    @PostMapping("/language")
+    public ResponseEntity<?> setLanguage(@RequestBody LanguageRequest req) {
+        log.info("setLanguage email={}, language={}", req.email(), req.language());
+        var user = userRepository.findByEmail(req.email())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+        user.setLanguage(req.language());
+        userRepository.save(user);
+        return ResponseEntity.ok(new ProfileResult(true, "language saved", user.getEmail(), user.getNation(), user.getLanguage()));
+    }
+
+    /** 옵션: nation, language를 한 번에 업데이트하고 싶을 때 */
+    @PostMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestBody ProfileRequest req) {
+        log.info("updateProfile email={}, nation={}, language={}", req.email(), req.nation(), req.language());
+        var user = userRepository.findByEmail(req.email())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+        if (req.nation() != null && !req.nation().isBlank()) user.setNation(req.nation());
+        if (req.language() != null && !req.language().isBlank()) user.setLanguage(req.language());
+        userRepository.save(user);
+        return ResponseEntity.ok(new ProfileResult(true, "profile saved", user.getEmail(), user.getNation(), user.getLanguage()));
+    }
+
     // DTOs
     public record UserRegisterRequest(String email, String password, String name) {}
     public record UserLoginRequest(String email, String password) {}
     public record SimpleMessage(String message) {}
     public record NationRequest(String email, String nation) {}
+    public record LanguageRequest(String email, String language) {}
+    public record ProfileRequest(String email, String nation, String language) {}
+    public record ProfileResult(boolean success, String message, String email, String nation, String language) {}
 }

@@ -27,16 +27,43 @@ export async function request(url, options = {}) {
 }
 
 export const api = {
-    signup(payload) {
+    // ✅ 회원가입
+    signup({ email, name, password }) {
         return request('/api/auth/register', {
             method: 'POST',
-            body: JSON.stringify(payload),
+            body: JSON.stringify({ email, name, password }),
         });
     },
-    setNation(payload) {          // { email, nation }
-        return request('/api/users/nation', {
+
+    // (선택) 로그인
+    login({ email, password }) {
+        return request('/api/auth/login', {
             method: 'POST',
-            body: JSON.stringify(payload),
+            body: JSON.stringify({ email, password }),
+        });
+    },
+
+    // ✅ 국가 저장
+    setNation({ email, nation }) {
+        return request('/api/auth/nation', {
+            method: 'POST',
+            body: JSON.stringify({ email, nation }),
+        });
+    },
+
+    // ✅ 언어 저장
+    setLanguage({ email, language }) {
+        return request('/api/auth/language', {
+            method: 'POST',
+            body: JSON.stringify({ email, language }),
+        });
+    },
+
+    // (옵션) 한번에 업데이트
+    updateProfile({ email, nation, language }) {
+        return request('/api/auth/profile', {
+            method: 'POST',
+            body: JSON.stringify({ email, nation, language }),
         });
     },
 };

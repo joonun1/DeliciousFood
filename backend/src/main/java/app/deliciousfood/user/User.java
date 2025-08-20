@@ -30,4 +30,7 @@ public class User {
 
     @Column(name = "nation")
     private String nation;
+
+    @Column(name = "language")
+    private String language;
 }
