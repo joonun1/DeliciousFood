@@ -24,18 +24,18 @@ export default function SignUp() {
 
     setSubmitting(true)
     try {
-      const res = await api.signup({
+      // 1) 회원가입
+      await api.signup({
         email: form.email,
         name: form.name,
         password: form.password,
       })
 
-      if (res?.success === false) {
-        setError(res.message || '회원가입에 실패했습니다.')
-      } else {
-        // 회원가입 성공 시 nation 페이지로 이동
-        nav('/nation')
-      }
+      // 2) 이메일 임시 저장 (다음 단계 API 호출에 사용)
+      localStorage.setItem('signupEmail', form.email)
+
+      // 3) 다음 단계로
+      nav('/nation')
     } catch (err) {
       setError(err.message || '네트워크 오류가 발생했습니다.')
     } finally {
