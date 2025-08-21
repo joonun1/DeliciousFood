@@ -1,31 +1,32 @@
 package app.deliciousfood.store;
 
-import jakarta.persistence.*;
-import lombok.Getter; import lombok.NoArgsConstructor; import lombok.Setter;
-import org.locationtech.jts.geom.Point;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexed;
+import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
-@Entity @Table(name = "stores")
+@Document(collection = "stores")
 @Getter @Setter @NoArgsConstructor
 public class Store {
+
     @Id
-    @org.hibernate.annotations.UuidGenerator
-    private UUID id;
+    private String id;
 
-    @Version Long version;
-
-    @Column(nullable = false) private String name;
+    private String name;
     private String address;
     private String description;
 
-    @Column(name = "rating_avg")  private BigDecimal ratingAvg;
-    @Column(name = "rating_count") private Integer ratingCount;
+    private BigDecimal ratingAvg;
+    private Integer ratingCount;
 
-    @Column(name = "geom", columnDefinition = "geography(Point,4326)", nullable = false)
-    private Point location;
+    // 위도/경도 저장용 GeoJSON 포인트 (lng, lat 순)
+    @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
+    private GeoJsonPoint location;
 
-    @Column(name = "created_at") private OffsetDateTime createdAt;
+    private OffsetDateTime createdAt;
 }

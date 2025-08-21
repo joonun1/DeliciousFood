@@ -1,36 +1,26 @@
 package app.deliciousfood.user;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import java.time.Instant;
 
-@Entity
-@Table(name = "users")
-@Getter @Setter @NoArgsConstructor
+@Document(collection = "users")
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @Builder
 public class User {
-    @Id @GeneratedValue
-    @Column(columnDefinition = "uuid")
-    private UUID id;
+    @Id
+    private String id;
 
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)           // 이메일 유니크 인덱스
     private String email;
 
-    // DB 컬럼명과 매핑
-    @Column(name = "password_hash")
-    private String passwordHash;
-
     private String name;
-
-    @Column(name = "created_at")
-    private OffsetDateTime createdAt;
-
-    @Column(name = "nation")
+    private String passwordHash;
     private String nation;
-
-    @Column(name = "language")
     private String language;
+
+    private Instant createdAt;
 }

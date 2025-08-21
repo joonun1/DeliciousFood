@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class UserController {
         u.setEmail(req.email());
         u.setName(req.name());
         u.setPasswordHash(passwordEncoder.encode(req.password()));
-        u.setCreatedAt(OffsetDateTime.now());
+        u.setCreatedAt(Instant.now());
         userRepository.save(u);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new SimpleMessage("registered"));

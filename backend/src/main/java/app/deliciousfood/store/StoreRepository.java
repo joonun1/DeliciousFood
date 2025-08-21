@@ -1,19 +1,13 @@
 package app.deliciousfood.store;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Point;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface StoreRepository extends JpaRepository<Store, UUID> {
-
-    // 반경(m) 이내를 거리순으로
-    @Query(value = """
-        SELECT * FROM stores
-        WHERE ST_DWithin(geom, ST_MakePoint(:lng, :lat)::geography, :radiusM)
-        ORDER BY ST_DistanceSphere(geom, ST_MakePoint(:lng, :lat))
-        LIMIT :limit
-        """, nativeQuery = true)
-    List<Store> findNearby(double lat, double lng, int radiusM, int limit);
+public interface StoreRepository extends MongoRepository<Store, String> {
+    // Mongo의 near 쿼리 (2dsphere 인덱스 필요)
+    List<Store> findByLocationNear(Point point, Distance maxDistance, Pageable pageable);
 }

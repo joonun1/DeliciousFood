@@ -1,9 +1,9 @@
 package app.deliciousfood.user;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
-import java.util.UUID;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+import java.util.Optional;
+
+public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByEmail(String email);
 }

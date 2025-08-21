@@ -1,10 +1,10 @@
+// ReviewRepository
 package app.deliciousfood.review;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface ReviewRepository extends JpaRepository<Review, UUID> {
-    List<Review> findByStoreIdOrderByCreatedAtDesc(UUID storeId);
+public interface ReviewRepository extends MongoRepository<Review, String> {
+    List<Review> findByStoreIdOrderByCreatedAtDesc(String storeId);
 }
