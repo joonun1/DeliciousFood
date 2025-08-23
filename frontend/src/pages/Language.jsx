@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api/client'
 
@@ -10,6 +10,7 @@ export default function Language() {
   const [selected, setSelected] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [query, setQuery] = useState('') // 검색어 상태 추가
 
   useEffect(() => {
     const e = localStorage.getItem('signupEmail') || ''
@@ -40,33 +41,73 @@ export default function Language() {
     }
   }
 
+  // 검색어에 따른 필터링
+  const filteredLangs = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    return LANGS.filter(l => l.toLowerCase().includes(q))
+  }, [query])
+
+  const onBack = () => {
+    nav('/nation')
+  }
+
   return (
-      <div className="page-root">
-        {/* 디자인 변경 없이 원래 구조 유지 */}
-        <div className="language-container">
-          <h2>Your Language</h2>
-          <div className="language-list">
-            {LANGS.map(l => (
-                <button
-                    key={l}
-                    className={`lang-btn ${selected === l ? 'selected' : ''}`}
-                    onClick={() => onSelect(l)}
-                    type="button"
-                >
-                  {l}
-                </button>
-            ))}
-          </div>
-          {error && <p className="error-text">{error}</p>}
-          <button
-              className="button continue-btn"
-              onClick={onNext}
-              disabled={!selected || saving}
-              type="button"
-          >
-            {saving ? 'Saving...' : 'Next'}
-          </button>
+    <div className="page-root">
+      <div className="language-container">
+        <div
+          className="back-btn"
+          onClick={onBack}
+          style={{ cursor: 'pointer', marginBottom: '16px' }}
+        >
         </div>
+        <div className="title-row" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+  {/* 화살표 버튼 */}
+  <div className="back-btn" onClick={onBack} style={{ cursor: 'pointer' }}>
+    <img src="/img/arrow.svg" alt="Back" style={{ width: '24px', height: '24px' }} />
+  </div>
+
+  {/* 제목 */}
+  <h2 style={{ margin: 0 }}>Your Language</h2>
+</div>
+
+        {/* 검색창 추가 */}
+        <div className="search-bar" style={{ marginBottom: '12px' }}>
+          <input
+            type="search"
+            id="search-input"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+          />
+          <span className="search-icon">🔍</span>
+        </div>
+
+        <div className="language-list">
+          {filteredLangs.length === 0 ? (
+            <p style={{ color: '#888', textAlign: 'center' }}>검색 결과가 없습니다.</p>
+          ) : (
+            filteredLangs.map(l => (
+              <button
+                key={l}
+                className={`lang-btn ${selected === l ? 'selected' : ''}`}
+                onClick={() => onSelect(l)}
+                type="button"
+              >
+                {l}
+              </button>
+            ))
+          )}
+        </div>
+
+        {error && <p className="error-text">{error}</p>}
+        <button
+          className="button continue-btn"
+          onClick={onNext}
+          disabled={!selected || saving}
+          type="button"
+        >
+          {saving ? 'Saving...' : 'Next'}
+        </button>
       </div>
+    </div>
   )
 }

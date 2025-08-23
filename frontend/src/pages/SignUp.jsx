@@ -31,10 +31,10 @@ export default function SignUp() {
         password: form.password,
       })
 
-      // 2) 이메일 임시 저장 (다음 단계 API 호출에 사용)
+      // 2) 이메일 저장 (다음 단계에 사용)
       localStorage.setItem('signupEmail', form.email)
 
-      // 3) 다음 단계로
+      // 3) 다음 단계
       nav('/nation')
     } catch (err) {
       setError(err.message || '네트워크 오류가 발생했습니다.')
@@ -43,53 +43,68 @@ export default function SignUp() {
     }
   }
 
+ const onBack = () => {
+    nav('/home')
+  }
+
   return (
-      <div className="page-root">
-        <div className="signup-container">
-          <h2>Sign up</h2>
-          <form onSubmit={onSubmit} className="signup-form">
-            <input
-                name="name"
-                type="text"
-                placeholder="Nickname*"
-                className="input"
-                value={form.name}
-                onChange={onChange}
-                required
-            />
-            <input
-                name="password"
-                type="password"
-                placeholder="Password*"
-                className="input"
-                value={form.password}
-                onChange={onChange}
-                minLength={4}
-                required
-            />
-            <input
-                name="email"
-                type="email"
-                placeholder="E-mail"
-                className="input"
-                value={form.email}
-                onChange={onChange}
-                required
-            />
-            {error && <p className="error-text">{error}</p>}
-            <button className="button continue-btn" disabled={submitting}>
-              {submitting ? '가입 중...' : 'Continue'}
-            </button>
-          </form>
-          <div className="divider"><span>OR</span></div>
-          <div className="social-buttons">
-            <button className="button social">Continue with Apple</button>
-            <button className="button social">Continue with Google</button>
+    <div className="page-root">
+      {/* ✅ Language/Nation과 동일한 상단 헤더 구조/위치 */}
+      <div className="nation-container">
+        <div className="title-row">
+          <div className="back-btn" onClick={onBack}>
+            <img src="/img/arrow.svg" alt="Back"/>
           </div>
-          <p className="bottom-text">
-            Already have an account? <Link to="/login">Sign in</Link>
-          </p>
+          <h2>Sign Up</h2>
         </div>
+
+        <form onSubmit={onSubmit} className="signup-form">
+          <input
+            name="name"
+            type="text"
+            placeholder="Nickname*"
+            className="input"
+            value={form.name}
+            onChange={onChange}
+            required
+          />
+          <input
+            name="password"
+            type="password"
+            placeholder="Password*"
+            className="input"
+            value={form.password}
+            onChange={onChange}
+            minLength={4}
+            required
+          />
+          <input
+            name="email"
+            type="email"
+            placeholder="E-mail"
+            className="input"
+            value={form.email}
+            onChange={onChange}
+            required
+          />
+
+          {error && <p className="error-text">{error}</p>}
+
+          <button className="button continue-btn" disabled={submitting}>
+            {submitting ? '가입 중...' : 'Continue'}
+          </button>
+        </form>
+
+        <div className="divider"><span>OR</span></div>
+        <div className="social-buttons">
+          <button className="button social">Continue with Apple</button>
+          <button className="button social">Continue with Google</button>
+        </div>
+
+        <p className="bottom-text">
+          Already have an account? <Link to="/login">Sign in</Link>
+        </p>
       </div>
+    </div>
   )
 }
