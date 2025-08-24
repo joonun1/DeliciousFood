@@ -131,7 +131,7 @@ h2 {
   flex-direction: column;
   gap: 16px;
   margin-bottom: 33px;
-  scrollbar-width: none;
+  
   -ms-overflow-style: none;
   -webkit-mask-image: linear-gradient(to bottom, black, black calc(100% - 50px), transparent);
   mask-image: linear-gradient(to bottom, black, black calc(100% - 50px), transparent);
@@ -178,7 +178,7 @@ h2 {
 .continue-btn:hover { background-color: #FF3D00; color: white; text-decoration: none; }
 
 /* language */
-.Language-container {
+.language-container {
   width: 100vw;
   max-width: 402px;
   height: 100dvh;
@@ -189,23 +189,26 @@ h2 {
   flex-direction: column;
 }
 
-.language {
+.language-list {
   flex: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
   margin-bottom: 33px;
-  scrollbar-width: none;
+
+  /* 스크롤 감추기 */
   -ms-overflow-style: none;
   -webkit-mask-image: linear-gradient(to bottom, black, black calc(100% - 50px), transparent);
   mask-image: linear-gradient(to bottom, black, black calc(100% - 50px), transparent);
   padding-right: 10px;
 }
 
-.language::-webkit-scrollbar { display: none; }
+.language-list::-webkit-scrollbar {
+  display: none;
+}
 
-.language-btn {
+.lang-btn {
   height: 44px;
   background-color: transparent;
   border: 1px solid #555;
@@ -221,10 +224,57 @@ h2 {
   line-height: 44px;
   box-sizing: border-box;
 }
-.language-btn:hover:not(.disabled):not(.selected) { background-color: #222; }
-.language-btn.selected { background-color: #FF3D00; color: white; }
-.language-btn.disabled { color: #555; border-color: #333; cursor: not-allowed; background-color: transparent; }
-.language-btn.faded { color: #666666; border-color: #444444; background-color: transparent; cursor: pointer; pointer-events: auto; }
+
+.lang-btn:hover:not(.disabled):not(.selected) {
+  background-color: #222;
+}
+
+.lang-btn.selected {
+  background-color: #FF3D00;
+  color: white;
+}
+
+.lang-btn.disabled {
+  color: #555;
+  border-color: #333;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+.lang-btn.faded {
+  color: #666666;
+  border-color: #444444;
+  background-color: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+/* ✅ 페이지 공통 헤더 (Nation, Language에서 재사용) */
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.title-row h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ✅ 뒤로가기 버튼 */
+.back-btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.back-btn img {
+  width: 24px;
+  height: 24px;
+}
+
 
 .nation-btn.faded { color: #666666; border-color: #444444; background-color: transparent; cursor: pointer; pointer-events: auto; }
 
