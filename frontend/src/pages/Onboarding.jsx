@@ -9,7 +9,7 @@ export default function Onboarding() {
       </div>
       <div className="auth-buttons">
         <button className="button signup-btn" onClick={() => navigate('/signup')}>Sign up</button>
-        <button className="button signin-btn">Sign in</button>
+        <button className="button signin-btn" onClick={() => navigate('/login')}>Sign in</button>
       </div>
     </div>
   );

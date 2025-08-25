@@ -6,6 +6,8 @@ import SignUp from './pages/SignUp.jsx'
 import Nation from './pages/Nation.jsx'
 import Language from './pages/Language.jsx'
 import Survey from './pages/Survey.jsx'
+import Login from './pages/Login.jsx'
+import Complete from './pages/Complete.jsx'
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/nation" element={<Nation />} />
         <Route path="/language" element={<Language />} />
         <Route path="/survey" element={<Survey />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/complete" element={<Complete />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

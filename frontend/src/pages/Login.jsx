@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { api } from '../api/client'
 
-export default function SignUp() {
+export default function Login() {
   const nav = useNavigate()
-  const [form, setForm] = useState({ name: '', password: '', email: '' })
+  const [form, setForm] = useState({ email: '', password: '' })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
@@ -17,25 +17,19 @@ export default function SignUp() {
     e.preventDefault()
     setError('')
 
-    // 간단한 유효성 검사
     if (!form.email.includes('@')) return setError('이메일 형식이 올바르지 않습니다.')
-    if (!form.name.trim()) return setError('닉네임을 입력하세요.')
     if (form.password.length < 4) return setError('비밀번호는 4자 이상이어야 합니다.')
 
     setSubmitting(true)
     try {
-      // 1) 회원가입
-      await api.signup({
+      // 1) 로그인 API 호출
+      await api.login({
         email: form.email,
-        name: form.name,
         password: form.password,
       })
 
-      // 2) 이메일 저장 (다음 단계에 사용)
-      localStorage.setItem('signupEmail', form.email)
-
-      // 3) 다음 단계
-      nav('/nation')
+      // 2) 로그인 성공 후 홈으로 이동
+      nav('/home')
     } catch (err) {
       setError(err.message || '네트워크 오류가 발생했습니다.')
     } finally {
@@ -43,25 +37,25 @@ export default function SignUp() {
     }
   }
 
- const onBack = () => {
+  const onBack = () => {
     nav('/home')
   }
 
   return (
     <div className="page-root">
-      {/* ✅ Language/Nation과 동일한 상단 헤더 구조/위치 */}
+      {/* ✅ Language/Nation/SignUp과 동일한 상단 헤더 */}
       <div className="entire-container">
         <div className="title-row">
-          <h2>Sign Up</h2>
+          <h2>Sign In</h2>
         </div>
 
         <form onSubmit={onSubmit} className="signup-form">
           <input
-            name="name"
-            type="text"
-            placeholder="Nickname *"
+            name="email"
+            type="email"
+            placeholder="E-mail *"
             className="input"
-            value={form.name}
+            value={form.email}
             onChange={onChange}
             required
           />
@@ -72,23 +66,14 @@ export default function SignUp() {
             className="input"
             value={form.password}
             onChange={onChange}
+            required
             minLength={4}
-            required
-          />
-          <input
-            name="email"
-            type="email"
-            placeholder="E-mail *"
-            className="input"
-            value={form.email}
-            onChange={onChange}
-            required
           />
 
           {error && <p className="error-text">{error}</p>}
 
           <button className="button sign-btn" disabled={submitting}>
-            {submitting ? '가입 중...' : 'Continue'}
+            {submitting ? '로그인 중...' : 'Continue'}
           </button>
         </form>
 
@@ -99,7 +84,7 @@ export default function SignUp() {
         </div>
 
         <p className="bottom-text">
-          Already have an account? <Link to="/login">Sign in</Link>
+          Don’t have an account? <Link to="/signup">Sign up</Link>
         </p>
       </div>
     </div>

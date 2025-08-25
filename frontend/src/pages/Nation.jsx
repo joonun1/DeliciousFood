@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { api } from '../api/client'
+import { useNavigate } from 'react-router-dom'
 
 const ALL_NATIONS = [
   "USA", "Japan", "China", "France", "Philippines", "Thailand", "Canada",
@@ -32,36 +31,23 @@ export default function Nation() {
     localStorage.setItem('signupNation', nation)
   }
 
-  const onContinue = async (e) => {
-    // 선택 안 했으면 이동 막기
+  const onContinue = (e) => {
     if (!selected) {
       e.preventDefault()
       return
     }
-
-    // 백엔드에 nation 저장
-    const email = localStorage.getItem('signupEmail') || ''
-    if (!email) {
-      e.preventDefault()
-      nav('/signup', { replace: true })
-      return
-    }
-    try {
-      await api.setNation({ email, nation: selected })
-    } catch (err) {
-      e.preventDefault()
-      alert(err.message || '국가 저장 중 오류가 발생했습니다.')
-    }
+    // 바로 다음 페이지 이동
+    nav('/language')
   }
 
-  // 🔙 뒤로 가기 (Language → Nation → Home 순서 유지)
+  // 🔙 뒤로 가기
   const onBack = () => {
-    nav('/signup') // Nation은 홈으로 이동
+    nav('/signup')
   }
 
   return (
     <div className="page-root">
-      <div className="nation-container">
+      <div className="entire-container">
         <div className="title-row">
           <div className="back-btn" onClick={onBack}>
             <img src="/img/arrow.svg" alt="Back"/>
@@ -76,7 +62,7 @@ export default function Nation() {
             value={query}
             onChange={e => setQuery(e.target.value)}
           />
-          <span className="search-icon">🔍</span>
+          <span className="search-icon"><img src="/img/search.svg" alt="search" /></span>
         </div>
 
         <div className="nation-list">
@@ -95,9 +81,14 @@ export default function Nation() {
           ))}
         </div>
 
-        <Link className="button continue-btn" to="/language" onClick={onContinue}>
+        <button
+          className="button continue-btn"
+          onClick={onContinue}
+          type="button"
+          disabled={!selected}
+        >
           Next
-        </Link>
+        </button>
       </div>
     </div>
   )
