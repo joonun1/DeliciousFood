@@ -22,33 +22,50 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterRequest req) {
-        log.info("register called email={}, name={}", req.email(), req.name());
-        if (userRepository.findByEmail(req.email()).isPresent()) {
+        // 정규화
+        final String email = req.email() == null ? "" : req.email().trim().toLowerCase();
+        final String name  = req.name()  == null ? "" : req.name().trim();
+        final String rawPw = req.password() == null ? "" : req.password().trim();
+
+        log.info("register called email={}, name={}", email, name);
+
+        if (email.isEmpty() || rawPw.isEmpty() || name.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid input");
+        }
+        if (userRepository.findByEmail(email).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
         }
 
         User u = new User();
-        u.setEmail(req.email());
-        u.setName(req.name());
-        u.setPasswordHash(passwordEncoder.encode(req.password()));
-        u.setCreatedAt(Instant.now());
-        userRepository.save(u);
+        u.setEmail(email);
+        u.setName(name);
+        u.setPasswordHash(passwordEncoder.encode(rawPw));
+        u.setCreatedAt(java.time.Instant.now()); // Mongo가 다루기 쉬운 타입 권장
 
+        userRepository.save(u);
         return ResponseEntity.status(HttpStatus.CREATED).body(new SimpleMessage("registered"));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequest req) {
-        return userRepository.findByEmail(req.email())
+        // 정규화
+        final String email = req.email() == null ? "" : req.email().trim().toLowerCase();
+        final String rawPw = req.password() == null ? "" : req.password().trim();
+
+        log.info("login called email={}", email);
+
+        return userRepository.findByEmail(email)
                 .map(u -> {
                     String hash = u.getPasswordHash();
-                    if (hash == null || !passwordEncoder.matches(req.password(), hash)) {
+                    boolean ok = (hash != null) && passwordEncoder.matches(rawPw, hash);
+                    if (!ok) {
                         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
                     }
                     return ResponseEntity.ok(new SimpleMessage("login ok"));
                 })
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials"));
     }
+
 
     @PostMapping("/nation")
     public ResponseEntity<?> setNation(@RequestBody NationRequest req) {
