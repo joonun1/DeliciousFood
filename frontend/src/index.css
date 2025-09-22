@@ -262,6 +262,7 @@ html, body {
 .container,
 .entire-container {
   width: 100vw;
+  min-height: 100dvh;
   max-width: 420px;
   height: 100dvh;
   margin: 0 auto;
@@ -493,13 +494,12 @@ html, body {
 
 /* 하단 네비 */
 .bottom-nav {
+  margin-top: auto; /* 항상 맨 아래로 밀리도록 */
+  height: 60px;
+  background: #000; /* 배경색 맞춰주기 */
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 100%;  
-  height: 60px;
-  position: sticky;
-  bottom: 0;
 }
 
 .bottom-nav .nav-item {
@@ -524,3 +524,124 @@ html, body {
   border-radius: 0; /* 필요하면 모서리 둥글기 제거 */
 }
 
+/* 검색 상단 바 */
+.search-top-bar {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #000;
+  border-bottom: 1px solid #333;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 12px;
+  padding-left: 35px; /* 아이콘 자리 */
+  border-radius: 20px;
+  border: 1px solid #444;
+  background-color: #1c1c1c;
+  color: #fff;
+  font-size: 15px;
+}
+
+.search-input::placeholder {
+  color: #aaa;
+}
+
+.search-icon {
+  position: absolute;
+  margin-left: 25px;
+  color: #aaa;
+}
+
+/* 최근 검색 */
+.recent-section {
+  padding: 15px;
+}
+
+.recent-header {
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.recent-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recent-tag {
+  background-color: #1c1c1c;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 15px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* 추가 검색 (Voice / Image) */
+.extra-search {
+  margin-top: 20px;
+  border-top: 1px solid #333;
+}
+
+.extra-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  color: #fff;
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+.extra-icon {
+  color: #ff6b00;
+}
+
+/* 드롭다운 버튼 */
+.location-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: white;
+}
+
+.dropdown-menu {
+  position: absolute;
+  margin-top: 5px;
+  background: white;
+  color: black;
+  list-style: none;
+  padding: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100px;
+  z-index: 100;
+}
+
+.dropdown-menu li {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background: #f0f0f0;
+}
+
+/* 좋아요 버튼 */
+.like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: gray;
+}
+
+.like-btn.liked {
+  color: red;
+}
