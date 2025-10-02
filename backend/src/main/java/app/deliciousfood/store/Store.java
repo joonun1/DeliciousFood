@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.index.GeoSpatialIndexType;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 @Document(collection = "stores")
 @Getter @Setter @NoArgsConstructor
@@ -24,9 +24,10 @@ public class Store {
     private BigDecimal ratingAvg;
     private Integer ratingCount;
 
-    // 위도/경도 저장용 GeoJSON 포인트 (lng, lat 순)
+    // GeoJSON (lng, lat)
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private GeoJsonPoint location;
 
-    private OffsetDateTime createdAt;
+    // OffsetDateTime -> Instant 로 교체 (코덱 문제 방지)
+    private Instant createdAt;
 }
