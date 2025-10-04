@@ -15,8 +15,18 @@ export default function HomeScreen() {
 
   const [page, setPage] = useState("home"); // "home" | "search"
   const [query, setQuery] = useState("");
+  const [recentSearches, setRecentSearches] = useState([]);
 
-  const recentSearches = [];
+  // 검색어 엔터 시 최근 검색어 추가
+  const handleSearchKeyDown = (e) => {
+    if (e.key === 'Enter' && query.trim()) {
+      setRecentSearches((prev) => {
+        if (prev.includes(query.trim())) return prev;
+        return [query.trim(), ...prev].slice(0, 5); // 최대 5개
+      });
+      setQuery('');
+    }
+  };
 
   return (
     <div className="page-root">
@@ -24,39 +34,37 @@ export default function HomeScreen() {
         {/* 홈 화면 */}
         {page === "home" && (
           <>
-            {/* 상단 바 */}
-            <div className="top-bar">
-              <div className="location-dropdown">
-                <button
-                  className="location-btn"
-                  onClick={() => setShowDropdown(!showDropdown)}
-                >
-                  {location} ▼
-                </button>
-                {showDropdown && (
-                  <ul className="dropdown-menu">
-                    {locations.map((loc, idx) => (
-                      <li
-                        key={idx}
-                        onClick={() => {
-                          setLocation(loc);
-                          setShowDropdown(false);
-                        }}
-                      >
-                        {loc}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              <div className="icons">
-                <FaSearch onClick={() => setPage("search")} />
-                <FaBell />
-              </div>
-            </div>
-
-            {/* 음식 이미지 + 댓글 */}
+            {/* 음식 이미지 + 상단 요소 + 댓글 (food-section) */}
             <div className="food-section">
+              {/* 상단 바 요소들 */}
+              <div className="food-section-header">
+                <div className="location-dropdown">
+                  <button
+                    className="location-btn"
+                    onClick={() => setShowDropdown(!showDropdown)}
+                  >
+                    {location} ▼
+                  </button>
+                  {showDropdown && (
+                    <ul className="dropdown-menu">
+                      {locations.map((loc, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            setLocation(loc);
+                            setShowDropdown(false);
+                          }}
+                        >
+                          {loc}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <div className="icons">
+                  <FaSearch onClick={() => setPage("search")} />
+                </div>
+              </div>
               <img src="/img/food.jpg" alt="food" className="food-bg" />
               <div className="comment-overlay">
                 {comments.map((c) => (
@@ -70,8 +78,7 @@ export default function HomeScreen() {
                 ))}
               </div>
             </div>
-
-            {/* 가게 정보 */}
+            {/* 가게 정보 (food-section 바깥, 하단 바 위) */}
             <div className="restaurant-info">
               <span className="name">On-tatteut Sotbap</span>
               <span className="distance">235m</span>
@@ -95,9 +102,9 @@ export default function HomeScreen() {
                 placeholder="Search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
                 className="search-input"
               />
-              <FaSearch className="search-icon" />
             </div>
 
             {/* 최근 검색 */}
@@ -108,7 +115,15 @@ export default function HomeScreen() {
               </div>
               <div className="recent-tags">
                 {recentSearches.map((item, idx) => (
-                  <span key={idx} className="recent-tag">{item} ✕</span>
+                  <span key={idx} className="recent-tag">
+                    {item}
+                    <span
+                      style={{ marginLeft: 6, cursor: 'pointer' }}
+                      onClick={() => setRecentSearches(recentSearches.filter((v, i) => i !== idx))}
+                    >
+                      ✕
+                    </span>
+                  </span>
                 ))}
               </div>
             </div>
