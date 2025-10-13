@@ -1,11 +1,17 @@
 spring:
-  config:
-    import: optional:file:.env[.properties]
+  application:
+    name: DeliciousFood
 
   data:
     mongodb:
-      uri: ${MONGO_URI}
-      database: ${MONGO_DB}
+      # Atlas 연결 (DB 이름: delicious)
+      uri: "mongodb+srv://2071199:dydrkfl!23@cluster0.b72qlr9.mongodb.net/delicious?retryWrites=true&w=majority&appName=Cluster0"
 
-  jpa:
-    open-in-view: false
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.data.mongodb: INFO
+    org.mongodb.driver: WARN
