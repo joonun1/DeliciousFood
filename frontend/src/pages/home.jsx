@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaSearch, FaBell, FaHome, FaMap, FaHeart, FaUser, FaMicrophone, FaCamera } from "react-icons/fa";
+import { api } from '../api/client';
 
 export default function HomeScreen() {
   const [comments] = useState([
@@ -16,6 +17,19 @@ export default function HomeScreen() {
   const [page, setPage] = useState("home"); // "home" | "search"
   const [query, setQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState([]);
+
+  // ✅ 여기 추가: GET 호출 후 콘솔 확인
+  useEffect(() => {
+    async function fetchStore() {
+      try {
+        const data = await api.getStore("68de5ecfc695e985509bd75d");
+        console.log("✅ GET 호출 성공:", data);
+      } catch (err) {
+        console.error("❌ GET 호출 실패:", err.message);
+      }
+    }
+    fetchStore();
+  }, []);
 
   // 검색어 엔터 시 최근 검색어 추가
   const handleSearchKeyDown = (e) => {
@@ -119,7 +133,9 @@ export default function HomeScreen() {
                     {item}
                     <span
                       style={{ marginLeft: 6, cursor: 'pointer' }}
-                      onClick={() => setRecentSearches(recentSearches.filter((v, i) => i !== idx))}
+                      onClick={() =>
+                        setRecentSearches(recentSearches.filter((v, i) => i !== idx))
+                      }
                     >
                       ✕
                     </span>

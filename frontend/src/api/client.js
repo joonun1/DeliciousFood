@@ -66,5 +66,12 @@ export const api = {
             body: JSON.stringify({ email, nation, language }),
         });
     },
+    
+    getStore(storeId) {
+    return request(`/api/stores/${storeId}`, {
+      method: 'GET',
+    });
+  },
+
 };
 
