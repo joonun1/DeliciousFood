@@ -17,6 +17,7 @@ export default function HomeScreen() {
   const [page, setPage] = useState("home"); // "home" | "search"
   const [query, setQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState([]);
+  const [store, setStore] = useState(null);
 
   // ✅ 여기 추가: GET 호출 후 콘솔 확인
   useEffect(() => {
@@ -24,6 +25,8 @@ export default function HomeScreen() {
       try {
         const data = await api.getStore("68de5ecfc695e985509bd75d");
         console.log("✅ GET 호출 성공:", data);
+        setStore(data);
+
       } catch (err) {
         console.error("❌ GET 호출 실패:", err.message);
       }
@@ -94,7 +97,7 @@ export default function HomeScreen() {
             </div>
             {/* 가게 정보 (food-section 바깥, 하단 바 위) */}
             <div className="restaurant-info">
-              <span className="name">On-tatteut Sotbap</span>
+              <span className="name">{store.name}</span>
               <span className="distance">235m</span>
               <button
                 className={`like-btn ${liked ? "liked" : ""}`}
