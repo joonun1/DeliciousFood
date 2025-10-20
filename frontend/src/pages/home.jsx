@@ -97,7 +97,8 @@ export default function HomeScreen() {
             </div>
             {/* 가게 정보 (food-section 바깥, 하단 바 위) */}
             <div className="restaurant-info">
-              <span className="name">{store.name}</span>
+              <span className="name">{store?.name ?? '가게 이름 없음'}</span>
+
               <span className="distance">235m</span>
               <button
                 className={`like-btn ${liked ? "liked" : ""}`}
