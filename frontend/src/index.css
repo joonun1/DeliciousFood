@@ -677,3 +677,294 @@ html, body {
   font-size: 14px;
   color: gray;
 }
+
+/* ✅ 전체 liked 화면 */
+.liked-screen {
+  flex: 1;
+  overflow-y: auto; /* ✅ 내용만 스크롤 */
+  padding: 20px;
+  padding-bottom: 100px; /* ✅ 네비게이션 공간 확보 */
+  background-color: #111;
+  color: #fff;
+}
+
+
+.liked-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* ✅ 리스트 전체 */
+.liked-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+/* ✅ 개별 아이템 */
+.liked-item {
+  background-color: #1a1a1a;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.liked-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.6);
+}
+
+.liked-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-bottom: 1px solid #333;
+}
+
+/* ✅ 카드 내 정보 */
+.liked-info {
+  padding: 10px;
+}
+
+.liked-name {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.liked-distance {
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* ✅ 좋아요 비어있을 때 */
+.empty-text {
+  text-align: center;
+  color: #777;
+  margin-top: 40px;
+  font-size: 14px;
+}
+
+/* ✅ 디테일 화면 (같이 보기 좋게) */
+/* 상세 화면 전체 */
+.detail-screen {
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  color: #fff;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 스크롤 가능 부분 */
+.detail-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px; /* 하단 버튼 공간 확보 */
+}
+
+/* 상단 이미지 */
+.detail-header {
+  position: relative;
+  width: 100%;
+  height: 260px;
+}
+
+.detail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-btn {
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.detail-distance {
+  background: rgba(0,0,0,0.6);
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+/* 본문 */
+.detail-body {
+  padding: 16px;
+}
+
+.detail-name {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.detail-tags span {
+  background: #1a1a1a;
+  color: #ff5a00;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+  margin-right: 6px;
+}
+
+.detail-info-block {
+  margin-top: 12px;
+  color: #bbb;
+  font-size: 14px;
+}
+
+.detail-info-block p {
+  margin: 2px 0;
+}
+
+/* 아이콘 영역 */
+.detail-icons {
+  display: flex;
+  justify-content: space-around;
+  margin: 16px 0;
+  border-top: 1px solid #222;
+  border-bottom: 1px solid #222;
+  padding: 12px 0;
+}
+
+.detail-icons div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.detail-icons svg {
+  font-size: 16px;
+  color: white;
+  margin-bottom: 4px;
+}
+
+/* 지도 */
+.detail-map-section {
+  margin: 20px 0;
+}
+
+.map-label {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.detail-map {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* 리뷰 */
+.detail-review-section {
+  margin-top: 20px;
+}
+
+.review-tabs {
+  display: flex;
+  border-bottom: 1px solid #333;
+}
+
+.review-tabs span {
+  padding: 10px 20px;
+  color: #888;
+  cursor: pointer;
+}
+
+.review-tabs .active {
+  color: #ff5a00;
+  border-bottom: 2px solid #ff5a00;
+}
+
+.review-item {
+  margin-top: 12px;
+  background: #111;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.review-text {
+  font-size: 13px;
+  margin-top: 6px;
+  color: #ddd;
+}
+
+.review-more {
+  margin: 16px auto;
+  display: block;
+  background: none;
+  border: none;
+  color: #ff5a00;
+  font-size: 14px;
+}
+
+/* ✅ 하단 고정바 (높이·폰트 기존 bottom-nav과 동일) */
+.detail-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* 기존 bottom-nav 동일 */
+  background: #000;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #222;
+  z-index: 100;
+}
+
+.detail-bottom-bar .detail-btn {
+  background: none;
+  border: none;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 13px;
+}
+
+.detail-bottom-bar .detail-btn svg {
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+.detail-bottom-bar .detail-btn.way {
+  background-color: #ff3d00;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 20px;
+  flex-direction: row;
+  gap: 6px;
+}
