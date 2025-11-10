@@ -21,9 +21,11 @@ export default function Complete() {
         </div>
 
         {/* 하단 버튼 */}
-        <button onClick={onStart} className="button continue-btn">
-          Start
-        </button>
+        <div className="fixed-action-btn">
+          <button onClick={onStart} className="button continue-btn">
+            Start
+          </button>
+        </div>
       </div>
     </div>
   )

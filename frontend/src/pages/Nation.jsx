@@ -3,11 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 const ALL_NATIONS = [
   "USA", "Japan", "China", "France", "Philippines", "Thailand", "Canada",
-  "South Korea", "United Kingdom", "Australia", "Brazil", "India", "Mexico",
-  "Spain", "Italy", "Russia", "Argentina", "Egypt", "Nigeria", "South Africa",
-  "Sweden", "Norway", "Finland", "Denmark", "Switzerland", "Austria",
-  "Belgium", "Portugal", "Greece", "Turkey", "Indonesia", "Vietnam",
-  "Malaysia", "Singapore", "New Zealand"
+  "South Korea", "United Kingdom"
 ]
 
 export default function Nation() {
@@ -81,14 +77,16 @@ export default function Nation() {
           ))}
         </div>
 
-        <button
-          className="button continue-btn"
-          onClick={onContinue}
-          type="button"
-          disabled={!selected}
-        >
-          Next
-        </button>
+        <div className="fixed-action-btn">
+          <button
+            className="button continue-btn"
+            onClick={onContinue}
+            type="button"
+            disabled={!selected}
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   )

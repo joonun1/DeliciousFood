@@ -69,14 +69,16 @@ export default function Language() {
         </div>
 
         {/* 다음 버튼 */}
-        <button
-          className="button continue-btn"
-          onClick={onNext}
-          disabled={!selected}
-          type="button"
-        >
-          Next
-        </button>
+        <div className="fixed-action-btn">
+          <button
+            className="button continue-btn"
+            onClick={onNext}
+            disabled={!selected}
+            type="button"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   )
