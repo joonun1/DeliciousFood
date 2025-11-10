@@ -1,21 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaSearch,
+  FaBell,
   FaHome,
   FaMap,
   FaHeart,
   FaUser,
+  FaMicrophone,
+  FaCamera,
+  FaStar,
   FaShareAlt,
   FaPhone,
   FaClock,
-  FaStar,
 } from "react-icons/fa";
+import { api } from "../api/client";
 
 export default function HomeScreen() {
   const [comments] = useState([
     { id: 1, nation: "USA", user: "Kim", text: "It was so delicious that I want to visit again next time." },
     { id: 2, nation: "USA", user: "Tim", text: "The bossam set was so amazing !" },
-    { id: 3, nation: "USA", user: "Anna", text: "Local taste, very unique experience!" }
+    { id: 3, nation: "USA", user: "Anna", text: "Local taste, very unique experience!" },
   ]);
 
   const [location, setLocation] = useState("Anguk");
@@ -23,13 +27,12 @@ export default function HomeScreen() {
   const locations = ["Anguk", "Seoul", "Busan", "Daegu"];
   const [liked, setLiked] = useState(false);
 
-  // 페이지 상태: "home" | "search" | "liked" | "detail"
   const [page, setPage] = useState("home");
-
   const [query, setQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
 
+  // ✅ 프론트 더미 데이터 (기존 HEAD 유지)
   const restaurants = [
     {
       id: 1,
@@ -63,6 +66,21 @@ export default function HomeScreen() {
   ];
 
   const [likedList, setLikedList] = useState(restaurants);
+
+  // ✅ 백엔드 연동 (추가된 부분)
+  const [store, setStore] = useState(null);
+  useEffect(() => {
+    async function fetchStore() {
+      try {
+        const data = await api.getStore("68de5ecfc695e985509bd75d");
+        console.log("✅ GET 호출 성공:", data);
+        setStore(data);
+      } catch (err) {
+        console.error("❌ GET 호출 실패:", err.message);
+      }
+    }
+    fetchStore();
+  }, []);
 
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter" && query.trim()) {
@@ -114,8 +132,11 @@ export default function HomeScreen() {
                   )}
                 </div>
 
-                {/* 헤더 돋보기 아이콘(검색으로 이동) */}
-                <div className="icons" onClick={() => setPage("search")} style={{ cursor: "pointer" }}>
+                <div
+                  className="icons"
+                  onClick={() => setPage("search")}
+                  style={{ cursor: "pointer" }}
+                >
                   <FaSearch />
                 </div>
               </div>
@@ -133,11 +154,11 @@ export default function HomeScreen() {
                 ))}
               </div>
 
-              {/* 홈 하단에 뜨는 레스토랑 인포 (원래 위치-복원) */}
+              {/* ✅ 가게 정보 표시 (백엔드 데이터 우선, 없으면 더미 사용) */}
               <div className="restaurant-info">
                 <div className="restaurant-left">
-                  <span className="name">On-tatteut Sotbap</span>
-                  <span className="distance">235m</span>
+                  <span className="name">{store?.name ?? restaurants[0].name}</span>
+                  <span className="distance">{restaurants[0].distance}</span>
                 </div>
                 <div className="restaurant-right">
                   <button
@@ -181,9 +202,7 @@ export default function HomeScreen() {
                     <span
                       style={{ marginLeft: 6, cursor: "pointer" }}
                       onClick={() =>
-                        setRecentSearches(
-                          recentSearches.filter((v, i) => i !== idx)
-                        )
+                        setRecentSearches(recentSearches.filter((v, i) => i !== idx))
                       }
                     >
                       ✕
@@ -223,7 +242,6 @@ export default function HomeScreen() {
         {/* DETAIL */}
         {page === "detail" && selectedRestaurant && (
           <div className="detail-screen">
-            {/* 스크롤 가능한 본문(스크롤바는 CSS에서 숨김) */}
             <div className="detail-scroll-area">
               <div className="detail-header">
                 <img
@@ -278,7 +296,6 @@ export default function HomeScreen() {
               </div>
             </div>
 
-            {/* 상세 전용 하단바: bottom-nav 숨겨지고 이 바가 대신 표시됨 */}
             <div className="detail-bottom-bar-container">
               <div className="detail-bottom-bar">
                 <button className="detail-btn" onClick={() => toggleLike(selectedRestaurant)}>
@@ -295,7 +312,7 @@ export default function HomeScreen() {
           </div>
         )}
 
-        {/* BOTTOM NAV (상세 화면이면 숨김) */}
+        {/* 하단 네비게이션 (상세 화면에서는 숨김) */}
         {page !== "detail" && (
           <div className="bottom-nav">
             <div
