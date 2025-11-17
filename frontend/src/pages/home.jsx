@@ -23,8 +23,10 @@ export default function HomeScreen() {
   const locations = ["Anguk", "Seoul", "Busan", "Daegu"];
   const [liked, setLiked] = useState(false);
 
-  // 페이지 상태: "home" | "search" | "liked" | "detail"
-  const [page, setPage] = useState("home");
+  const [prevPage, setPrevPage] = useState("home");
+  const [page, setPage] = useState("home"); // home | search | liked | detail | detailReview | my
+
+  const [myTab, setMyTab] = useState("visits"); // visits | reviews | recent
 
   const [query, setQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState([]);
@@ -85,7 +87,8 @@ export default function HomeScreen() {
   return (
     <div className="page-root">
       <div className="entire-container">
-        {/* HOME */}
+
+        {/* --- HOME --- */}
         {page === "home" && (
           <>
             <div className="food-section">
@@ -114,13 +117,13 @@ export default function HomeScreen() {
                   )}
                 </div>
 
-                {/* 헤더 돋보기 아이콘(검색으로 이동) */}
                 <div className="icons" onClick={() => setPage("search")} style={{ cursor: "pointer" }}>
                   <FaSearch />
                 </div>
               </div>
 
               <img src="/img/food.jpg" alt="food" className="food-bg" />
+
               <div className="comment-overlay">
                 {comments.map((c) => (
                   <div key={c.id} className="comment">
@@ -133,29 +136,36 @@ export default function HomeScreen() {
                 ))}
               </div>
 
-              {/* 홈 하단에 뜨는 레스토랑 인포 (원래 위치-복원) */}
-              <div className="restaurant-info">
+              <div
+                className="restaurant-info"
+                onClick={() => {
+                  setPrevPage("home");
+                  setSelectedRestaurant(restaurants[0]);
+                  setPage("detail");
+                }}
+              >
                 <div className="restaurant-left">
                   <span className="name">On-tatteut Sotbap</span>
                   <span className="distance">235m</span>
                 </div>
-                <div className="restaurant-right">
-                  <button
-                    className={`like-btn ${liked ? "liked" : ""}`}
-                    onClick={() => {
-                      setLiked(!liked);
-                      toggleLike(restaurants[0]);
-                    }}
-                  >
-                    <FaHeart />
-                  </button>
-                </div>
+
+                <button
+                  className={`like-btn ${liked ? "liked" : ""}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLiked(!liked);
+                    toggleLike(restaurants[0]);
+                  }}
+                >
+                  <FaHeart />
+                </button>
               </div>
             </div>
           </>
         )}
 
-        {/* SEARCH */}
+
+        {/* --- SEARCH --- */}
         {page === "search" && (
           <>
             <div className="search-top-bar">
@@ -174,6 +184,7 @@ export default function HomeScreen() {
                 <span>Recent</span>
                 <button className="more-btn">More &gt;</button>
               </div>
+
               <div className="recent-tags">
                 {recentSearches.map((item, idx) => (
                   <span key={idx} className="recent-tag">
@@ -181,9 +192,7 @@ export default function HomeScreen() {
                     <span
                       style={{ marginLeft: 6, cursor: "pointer" }}
                       onClick={() =>
-                        setRecentSearches(
-                          recentSearches.filter((v, i) => i !== idx)
-                        )
+                        setRecentSearches(recentSearches.filter((v, i) => i !== idx))
                       }
                     >
                       ✕
@@ -195,16 +204,127 @@ export default function HomeScreen() {
           </>
         )}
 
-        {/* LIKED */}
+
+        {/* --- MY PAGE --- */}
+        {page === "my" && (
+          <div className="my-screen">
+            <div className="my-profile">
+              <span className="my-nation">USA</span>
+              <h2 className="my-name">Isabella</h2>
+            </div>
+
+            <div className="my-tabs">
+              <span
+                className={myTab === "visits" ? "active" : ""}
+                onClick={() => setMyTab("visits")}
+              >
+                My Visits
+              </span>
+
+              <span
+                className={myTab === "reviews" ? "active" : ""}
+                onClick={() => setMyTab("reviews")}
+              >
+                Reviews
+              </span>
+
+              <span
+                className={myTab === "recent" ? "active" : ""}
+                onClick={() => setMyTab("recent")}
+              >
+                Recent
+              </span>
+            </div>
+
+            {/* --- My Visits --- */}
+            {myTab === "visits" && (
+              <div className="my-visits-list">
+                {restaurants.map((r) => (
+                  <div
+                    key={r.id}
+                    className="my-visit-item"
+                    onClick={() => {
+                      setPrevPage("my");
+                      setSelectedRestaurant(r);
+                      setPage("detail");
+                    }}
+                  >
+                    <img src={r.img} alt={r.name} className="visit-img" />
+
+                    <div className="visit-info">
+                      <div className="visit-title-row">
+                        <span className="visit-name">{r.name}</span>
+                        <span className="visit-distance">{r.distance}</span>
+                      </div>
+
+                      <div className="visit-rating-row">⭐ {r.rating}</div>
+                    </div>
+
+                    <div className="visit-like-btn">
+                      <FaHeart
+                        className={
+                          likedList.find((x) => x.id === r.id) ? "heart liked" : "heart"
+                        }
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLike(r);
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+
+            {/* --- My Reviews (피그마 스타일) --- */}
+            {myTab === "reviews" && (
+              <div className="my-reviews-list">
+                {restaurants.map((r) =>
+                  r.reviews.map((rev) => (
+                    <div key={rev.id} className="review-item">
+                      <div className="review-header">
+                        <span className="review-user">{rev.user}</span>
+                        <span className="review-date">24.10.27</span>
+                      </div>
+
+                      <div className="review-stars">⭐⭐⭐⭐⭐</div>
+
+                      {/* 사진 3장 가로로 나란히 */}
+                      <div className="review-images-row">
+                        <img src={r.img} className="review-img" />
+                        <img src={r.img} className="review-img" />
+                        <img src={r.img} className="review-img" />
+                      </div>
+
+                      <p className="review-text">{rev.text}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+
+            {/* --- My Recent (비어있어도 클릭 동작은 정상) --- */}
+            {myTab === "recent" && (
+              <div className="recent-empty">No recent activity.</div>
+            )}
+          </div>
+        )}
+
+
+        {/* --- LIKED PAGE --- */}
         {page === "liked" && (
           <div className="liked-screen">
             <h2 className="liked-title">Liked Restaurants</h2>
+
             <div className="liked-list">
               {likedList.map((r) => (
                 <div
                   key={r.id}
                   className="liked-item"
                   onClick={() => {
+                    setPrevPage("liked");
                     setSelectedRestaurant(r);
                     setPage("detail");
                   }}
@@ -220,10 +340,10 @@ export default function HomeScreen() {
           </div>
         )}
 
-        {/* DETAIL */}
+
+        {/* --- DETAIL PAGE --- */}
         {page === "detail" && selectedRestaurant && (
           <div className="detail-screen">
-            {/* 스크롤 가능한 본문(스크롤바는 CSS에서 숨김) */}
             <div className="detail-scroll-area">
               <div className="detail-header">
                 <img
@@ -231,16 +351,22 @@ export default function HomeScreen() {
                   alt={selectedRestaurant.name}
                   className="detail-img"
                 />
+
                 <div className="detail-overlay">
-                  <button className="back-btn" onClick={() => setPage("liked")}>
+                  <button
+                    className="back-btn"
+                    onClick={() => setPage(prevPage)}
+                  >
                     ←
                   </button>
+
                   <span className="detail-distance">{selectedRestaurant.distance}</span>
                 </div>
               </div>
 
               <div className="detail-body">
                 <h2 className="detail-name">{selectedRestaurant.name}</h2>
+
                 <p className="detail-rating">
                   <FaStar className="star" /> {selectedRestaurant.rating}
                 </p>
@@ -259,12 +385,19 @@ export default function HomeScreen() {
                 </div>
 
                 <div className="detail-review-section">
+
                   <div className="review-tabs">
-                    <span className="active">Review</span>
+                    <span
+                      className="active"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => setPage("detailReview")}
+                    >
+                      Review
+                    </span>
                     <span>Menu</span>
                   </div>
 
-                  {selectedRestaurant.reviews.map((rev) => (
+                  {selectedRestaurant.reviews.slice(0, 1).map((rev) => (
                     <div key={rev.id} className="review-item">
                       <div className="review-header">
                         <span className="review-user">{rev.user}</span>
@@ -278,7 +411,6 @@ export default function HomeScreen() {
               </div>
             </div>
 
-            {/* 상세 전용 하단바: bottom-nav 숨겨지고 이 바가 대신 표시됨 */}
             <div className="detail-bottom-bar-container">
               <div className="detail-bottom-bar">
                 <button className="detail-btn" onClick={() => toggleLike(selectedRestaurant)}>
@@ -295,8 +427,34 @@ export default function HomeScreen() {
           </div>
         )}
 
-        {/* BOTTOM NAV (상세 화면이면 숨김) */}
-        {page !== "detail" && (
+
+        {/* --- DETAIL REVIEW PAGE --- */}
+        {page === "detailReview" && selectedRestaurant && (
+          <div className="detail-review-screen">
+
+            <button className="back-btn" onClick={() => setPage("detail")}>
+              ←
+            </button>
+
+            <h2 className="detail-review-title">Reviews</h2>
+
+            {selectedRestaurant.reviews.map((rev) => (
+              <div key={rev.id} className="review-item">
+                <div className="review-header">
+                  <span className="review-user">{rev.user}</span>
+                  <span className="review-date">24.10.27</span>
+                </div>
+
+                <div className="review-stars">⭐⭐⭐⭐☆</div>
+
+                <p className="review-text">{rev.text}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* --- BOTTOM NAV --- */}
+        {page !== "detail" && page !== "detailReview" && (
           <div className="bottom-nav">
             <div
               className={`nav-item ${page === "home" ? "active" : ""}`}
@@ -305,6 +463,7 @@ export default function HomeScreen() {
               <FaHome />
               <p>Home</p>
             </div>
+
             <div
               className={`nav-item ${page === "search" ? "active" : ""}`}
               onClick={() => setPage("search")}
@@ -312,10 +471,12 @@ export default function HomeScreen() {
               <FaSearch />
               <p>Search</p>
             </div>
+
             <div className="nav-item">
               <FaMap />
               <p>Map</p>
             </div>
+
             <div
               className={`nav-item ${page === "liked" ? "active" : ""}`}
               onClick={() => setPage("liked")}
@@ -323,12 +484,17 @@ export default function HomeScreen() {
               <FaHeart />
               <p>Liked</p>
             </div>
-            <div className="nav-item">
+
+            <div
+              className={`nav-item ${page === "my" ? "active" : ""}`}
+              onClick={() => setPage("my")}
+            >
               <FaUser />
               <p>My</p>
             </div>
           </div>
         )}
+
       </div>
     </div>
   );
