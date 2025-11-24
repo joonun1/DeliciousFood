@@ -1034,3 +1034,137 @@ html, body {
   max-width: none !important; /* override other max-width rules */
   box-sizing: border-box;
 }
+
+.my-screen {
+  padding: 20px;
+  color: #fff;
+}
+
+/* 프로필 영역 */
+.my-profile {
+  margin-bottom: 20px;
+}
+
+.my-nation {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.my-name {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+/* 탭 */
+.my-tabs {
+  display: flex;
+  gap: 18px;
+  margin: 20px 0;
+}
+
+.my-tabs span {
+  color: #888;
+  font-size: 15px;
+}
+
+.my-tabs .active {
+  color: #fff;
+  border-bottom: 2px solid orange;
+  padding-bottom: 4px;
+}
+
+/* 리스트 */
+.my-visits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.my-visit-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.visit-img {
+  width: 85px;
+  height: 85px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.visit-info {
+  flex: 1;
+}
+
+.visit-title-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.visit-name {
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.visit-distance {
+  color: #aaa;
+  font-size: 14px;
+}
+
+.visit-rating-row {
+  color: #f4c22b;
+}
+
+/* Like 하트 */
+.visit-like-btn .heart {
+  color: #777;
+  cursor: pointer;
+}
+
+.visit-like-btn .heart.liked {
+  color: red;
+}
+
+/* ==== Review 이미지 3장 가로 정렬(컨테이너 밖으로 안나가게) ==== */
+.review-images-row {
+  display: flex;
+  gap: 8px;                 /* 사진 사이 간격 */
+  overflow: hidden;         /* 부모를 벗어나는 이미지 숨김 */
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* 각 이미지: 부모 width 를 3등분해서 고정, 비율 유지하며 잘라서 보여줌 */
+.review-images-row .review-img {
+  flex: 0 0 calc((100% - 16px) / 3); /* gap 8px 두 번 => 16px */
+  width: calc((100% - 16px) / 3);
+  height: 84px;               /* 원하는 높이로 조절 (피그마 높이 대체) */
+  object-fit: cover;          /* 비율 유지하면서 중앙에서 잘라서 채움 */
+  border-radius: 8px;
+  display: block;
+}
+
+/* 작은 화면에서 이미지 높이 자동 조절 (선택적) */
+@media (max-width: 360px) {
+  .review-images-row .review-img {
+    height: 70px;
+  }
+}
+
+/* review-item 박스가 넓이를 넘지 않게 보장 */
+.my-reviews-list .review-item,
+.my-reviews-list .review-item .review-text {
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+/* 안전장치: 이미지가 인라인 요소로 인해 줄바꿈 되면 안되므로 */
+.review-images-row img {
+  line-height: 0;
+}
