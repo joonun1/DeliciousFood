@@ -7,4 +7,7 @@ import java.util.List;
 
 public interface ReviewRepository extends MongoRepository<Review, String> {
     List<Review> findByStoreIdOrderByCreatedAtDesc(String storeId);
+
+    // 유저가 쓴 리뷰 리스트
+    List<Review> findByUserIdOrderByCreatedAtDesc(String userId);
 }

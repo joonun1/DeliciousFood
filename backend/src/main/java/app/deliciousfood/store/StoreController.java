@@ -101,7 +101,7 @@ public class StoreController {
         return storeRepo.findByLocationNear(p, d, PageRequest.of(0, limit));
     }
 
-    // ---------- 리뷰 (기존) ----------
+    /* ---------- 리뷰 (기존) ----------
     public record CreateReviewReq(String storeId, String userId, int rating, String content) {}
 
     @PostMapping("/reviews")
@@ -119,4 +119,5 @@ public class StoreController {
     public List<Review> listReviews(@PathVariable String storeId) {
         return reviewRepo.findByStoreIdOrderByCreatedAtDesc(storeId);
     }
+     */
 }
