@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -26,7 +27,7 @@ public class StoreController {
     private final ReviewRepository reviewRepo;
 
     // ---------- Create ----------
-    public record CreateStoreReq(String name, String address, String description, double lat, double lng) {}
+    public record CreateStoreReq(String name, String address, String description, String imageUrl, double lat, double lng) {}
 
     @PostMapping("/stores")
     public Store createStore(@RequestBody CreateStoreReq req) {
@@ -34,7 +35,10 @@ public class StoreController {
         s.setName(req.name());
         s.setAddress(req.address());
         s.setDescription(req.description());
+        s.setImageUrl(req.imageUrl());
         s.setLocation(new GeoJsonPoint(req.lng(), req.lat())); // (lng, lat)
+        s.setRatingAvg(BigDecimal.ZERO);
+        s.setRatingCount(0);
         s.setCreatedAt(Instant.now());                         // Instant 로 변경
         return storeRepo.save(s);
     }
@@ -61,6 +65,9 @@ public class StoreController {
             String name,
             String address,
             String description,
+            String imageUrl,
+            BigDecimal ratingAvg,
+            Integer ratingCount,
             Double lat,
             Double lng
     ) {}
@@ -74,9 +81,12 @@ public class StoreController {
         if (req.name() != null) s.setName(req.name());
         if (req.address() != null) s.setAddress(req.address());
         if (req.description() != null) s.setDescription(req.description());
+        if (req.imageUrl() != null) s.setImageUrl(req.imageUrl());
         if (req.lat() != null && req.lng() != null) {
             s.setLocation(new GeoJsonPoint(req.lng(), req.lat()));
         }
+        if (req.ratingAvg() != null) s.setRatingAvg(req.ratingAvg());
+        if (req.ratingCount() != null) s.setRatingCount(req.ratingCount());
         Store saved = storeRepo.save(s);
         return ResponseEntity.ok(saved);
     }

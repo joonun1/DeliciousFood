@@ -1,10 +1,14 @@
 package app.deliciousfood.review;
 
+import app.deliciousfood.store.Store;
+import app.deliciousfood.store.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -17,6 +21,7 @@ import java.util.Optional;
 public class ReviewController {
 
     private final ReviewRepository reviewRepository;
+    private final StoreRepository storeRepo;
 
     // ---------- 리뷰 생성 ----------
     // POST /api/stores/{storeId}/reviews
@@ -36,6 +41,22 @@ public class ReviewController {
         r.setUpdatedAt(Instant.now());
 
         Review saved = reviewRepository.save(r);
+
+        Store store = storeRepo.findById(storeId)
+                .orElseThrow(() -> new RuntimeException("Store not found"));
+
+        int oldCount = store.getRatingCount() == null ? 0 : store.getRatingCount();
+        BigDecimal oldAvg = store.getRatingAvg() == null ? BigDecimal.ZERO : store.getRatingAvg();
+
+        BigDecimal newAvg = oldAvg.multiply(BigDecimal.valueOf(oldCount))
+                .add(BigDecimal.valueOf(req.rating()))
+                .divide(BigDecimal.valueOf(oldCount + 1), 2, RoundingMode.HALF_UP);
+
+        store.setRatingAvg(newAvg);
+        store.setRatingCount(oldCount + 1);
+
+        storeRepo.save(store);
+
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
@@ -72,16 +93,16 @@ public class ReviewController {
             @RequestBody UpdateReviewReq req
     ) {
         Optional<Review> opt = reviewRepository.findById(reviewId);
-        if (opt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (opt.isEmpty()) return ResponseEntity.notFound().build();
 
         Review r = opt.get();
         if (req.rating() != null) r.setRating(req.rating());
         if (req.content() != null) r.setContent(req.content());
-        // updatedAt 필드가 필요하다면 엔티티에 추가해서 여기서 같이 갱신
-
         Review saved = reviewRepository.save(r);
+
+        // 🔥 Store 평점 전체 재계산
+        recalcStoreRating(r.getStoreId());
+
         return ResponseEntity.ok(saved);
     }
 
@@ -89,10 +110,39 @@ public class ReviewController {
     // DELETE /api/reviews/{reviewId}
     @DeleteMapping("/reviews/{reviewId}")
     public ResponseEntity<Void> deleteReview(@PathVariable String reviewId) {
-        if (!reviewRepository.existsById(reviewId)) {
-            return ResponseEntity.notFound().build();
-        }
+        Optional<Review> opt = reviewRepository.findById(reviewId);
+        if (opt.isEmpty()) return ResponseEntity.notFound().build();
+
+        Review r = opt.get();
         reviewRepository.deleteById(reviewId);
+
+        // 🔥 삭제됐으니 평균 다시 계산
+        recalcStoreRating(r.getStoreId());
+
         return ResponseEntity.noContent().build();
+    }
+
+    private void recalcStoreRating(String storeId) {
+        List<Review> list = reviewRepository.findByStoreIdOrderByCreatedAtDesc(storeId);
+
+        if (list.isEmpty()) {
+            Store store = storeRepo.findById(storeId).orElseThrow();
+            store.setRatingAvg(BigDecimal.ZERO);
+            store.setRatingCount(0);
+            storeRepo.save(store);
+            return;
+        }
+
+        BigDecimal sum = BigDecimal.ZERO;
+        for (Review rv : list) {
+            sum = sum.add(BigDecimal.valueOf(rv.getRating()));
+        }
+
+        BigDecimal avg = sum.divide(BigDecimal.valueOf(list.size()), 2, RoundingMode.HALF_UP);
+
+        Store store = storeRepo.findById(storeId).orElseThrow();
+        store.setRatingAvg(avg);
+        store.setRatingCount(list.size());
+        storeRepo.save(store);
     }
 }

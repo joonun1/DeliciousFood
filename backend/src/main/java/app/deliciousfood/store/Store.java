@@ -24,6 +24,8 @@ public class Store {
     private BigDecimal ratingAvg;
     private Integer ratingCount;
 
+    private String imageUrl;
+
     // GeoJSON (lng, lat)
     @GeoSpatialIndexed(type = GeoSpatialIndexType.GEO_2DSPHERE)
     private GeoJsonPoint location;
