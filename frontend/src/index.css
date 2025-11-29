@@ -1168,3 +1168,14 @@ html, body {
 .review-images-row img {
   line-height: 0;
 }
+
+.map-screen {
+  height: calc(100vh - 120px); /* 화면 전체 높이에서 하단탭 높이만큼 빼기 */
+  width: 100%;
+}
+
+/* MapContainer 자체도 100%로 맞추기 */
+.map-screen .leaflet-container {
+  height: 100% !important;
+  width: 100% !important;
+}

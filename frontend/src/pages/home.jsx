@@ -11,6 +11,25 @@ import {
   FaStar,
 } from "react-icons/fa";
 
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+
+import L from "leaflet";
+
+// Leaflet 기본 아이콘 설정 (ES 모듈 방식)
+import iconUrl from "leaflet/dist/images/marker-icon.png";
+import iconRetinaUrl from "leaflet/dist/images/marker-icon-2x.png";
+import shadowUrl from "leaflet/dist/images/marker-shadow.png";
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+});
+
+
+
 export default function HomeScreen() {
   const [comments] = useState([
     { id: 1, nation: "USA", user: "Kim", text: "It was so delicious that I want to visit again next time." },
@@ -24,7 +43,7 @@ export default function HomeScreen() {
   const [liked, setLiked] = useState(false);
 
   const [prevPage, setPrevPage] = useState("home");
-  const [page, setPage] = useState("home"); // home | search | liked | detail | detailReview | my
+  const [page, setPage] = useState("home"); // home | search | liked | detail | detailReview | my | map
 
   const [myTab, setMyTab] = useState("visits"); // visits | reviews | recent
 
@@ -41,13 +60,16 @@ export default function HomeScreen() {
       rating: 4.7,
       phone: "02-123-4567",
       hours: "11:30 - 21:00",
-      address: "45-1, Anguk-ro, Seoul",
+      address: "12-3, Anguk-ro, Seoul",
       likedCount: "4.4K",
       tags: ["Local Pick", "Pork", "Preference 98%"],
       reviews: [
         { id: 1, user: "Tom", text: "It was so good, friendly staff!" },
         { id: 2, user: "Yuna", text: "Very local vibe and delicious food." },
       ],
+      // 예시 좌표 (Anguk 근처)
+      lat: 37.57, 
+      lng: 126.98
     },
     {
       id: 2,
@@ -61,6 +83,8 @@ export default function HomeScreen() {
       likedCount: "2.8K",
       tags: ["Udon", "Tempura", "Local Favorite"],
       reviews: [{ id: 1, user: "Chris", text: "Best noodles I've had!" }],
+      lat: 37.572,
+      lng: 126.991
     },
   ];
 
@@ -236,7 +260,6 @@ export default function HomeScreen() {
               </span>
             </div>
 
-            {/* --- My Visits --- */}
             {myTab === "visits" && (
               <div className="my-visits-list">
                 {restaurants.map((r) => (
@@ -276,8 +299,6 @@ export default function HomeScreen() {
               </div>
             )}
 
-
-            {/* --- My Reviews (피그마 스타일) --- */}
             {myTab === "reviews" && (
               <div className="my-reviews-list">
                 {restaurants.map((r) =>
@@ -290,7 +311,6 @@ export default function HomeScreen() {
 
                       <div className="review-stars">⭐⭐⭐⭐⭐</div>
 
-                      {/* 사진 3장 가로로 나란히 */}
                       <div className="review-images-row">
                         <img src={r.img} className="review-img" />
                         <img src={r.img} className="review-img" />
@@ -304,8 +324,6 @@ export default function HomeScreen() {
               </div>
             )}
 
-
-            {/* --- My Recent (비어있어도 클릭 동작은 정상) --- */}
             {myTab === "recent" && (
               <div className="recent-empty">No recent activity.</div>
             )}
@@ -385,7 +403,6 @@ export default function HomeScreen() {
                 </div>
 
                 <div className="detail-review-section">
-
                   <div className="review-tabs">
                     <span
                       className="active"
@@ -453,6 +470,26 @@ export default function HomeScreen() {
           </div>
         )}
 
+
+        {/* --- MAP PAGE --- */}
+        {page === "map" && (
+        <div className="map-screen">
+        <MapContainer center={[37.574, 126.985]} zoom={15}>
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution="&copy; OpenStreetMap contributors"
+              />
+              {restaurants.map((r) => (
+                <Marker key={r.id} position={[r.lat, r.lng]}>
+                  <Popup>
+                    {r.name} <br /> {r.address}
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          </div>
+        )}
+
         {/* --- BOTTOM NAV --- */}
         {page !== "detail" && page !== "detailReview" && (
           <div className="bottom-nav">
@@ -472,7 +509,10 @@ export default function HomeScreen() {
               <p>Search</p>
             </div>
 
-            <div className="nav-item">
+            <div
+              className={`nav-item ${page === "map" ? "active" : ""}`}
+              onClick={() => setPage("map")}
+            >
               <FaMap />
               <p>Map</p>
             </div>
