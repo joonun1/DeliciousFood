@@ -1,15 +1,7 @@
-import { useState } from "react";
-import {
-  FaSearch,
-  FaHome,
-  FaMap,
-  FaHeart,
-  FaUser,
-  FaShareAlt,
-  FaPhone,
-  FaClock,
-  FaStar,
-} from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { FaSearch, FaBell, FaHome, FaMap, FaStar, FaPhone, FaClock, FaShareAlt, FaHeart, FaUser, FaMicrophone, FaCamera } from "react-icons/fa";
+import { api } from '../api/client';
+
 
 export default function HomeScreen() {
   const [comments] = useState([
@@ -22,6 +14,7 @@ export default function HomeScreen() {
   const [showDropdown, setShowDropdown] = useState(false);
   const locations = ["Anguk", "Seoul", "Busan", "Daegu"];
   const [liked, setLiked] = useState(false);
+  
 
   const [prevPage, setPrevPage] = useState("home");
   const [page, setPage] = useState("home"); // home | search | liked | detail | detailReview | my
@@ -32,6 +25,22 @@ export default function HomeScreen() {
   const [recentSearches, setRecentSearches] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
 
+
+  const [stores, setStores] = useState([]);
+  const [additionalStore, setAdditionalStore] = useState(null); // 새로 추가
+
+  useEffect(() => {
+  async function fetchStores() {
+    try {
+      const storeIds = ["692960884b39f58aadb4079f", "68de5ecfc695e985509bd75d"];
+      const results = await Promise.all(storeIds.map(id => api.getStore(id)));
+      setStores(results); // 배열에 모든 식당 저장
+    } catch (err) {
+      console.error("❌ GET 호출 실패:", err.message);
+    }
+  }
+  fetchStores();
+}, []);
   const restaurants = [
     {
       id: 1,
@@ -145,7 +154,7 @@ export default function HomeScreen() {
                 }}
               >
                 <div className="restaurant-left">
-                  <span className="name">On-tatteut Sotbap</span>
+                  <span className="name">{stores[0]?.name ?? '가게 이름 없음'}</span>
                   <span className="distance">235m</span>
                 </div>
 
@@ -249,11 +258,11 @@ export default function HomeScreen() {
                       setPage("detail");
                     }}
                   >
-                    <img src={r.img} alt={r.name} className="visit-img" />
+                    <img src={r.img} alt={stores[0].name} className="visit-img" />
 
                     <div className="visit-info">
                       <div className="visit-title-row">
-                        <span className="visit-name">{r.name}</span>
+                        <span className="visit-name">{stores[0].name}</span>
                         <span className="visit-distance">{r.distance}</span>
                       </div>
 
@@ -329,7 +338,7 @@ export default function HomeScreen() {
                     setPage("detail");
                   }}
                 >
-                  <img src={r.img} alt={r.name} />
+                  <img src={r.img} alt={stores[0]?.name} />
                   <div className="liked-info">
                     <p className="liked-name">{r.name}</p>
                     <p className="liked-distance">{r.distance}</p>
@@ -365,10 +374,10 @@ export default function HomeScreen() {
               </div>
 
               <div className="detail-body">
-                <h2 className="detail-name">{selectedRestaurant.name}</h2>
+                <h2 className="detail-name">{stores[0].name}</h2>
 
                 <p className="detail-rating">
-                  <FaStar className="star" /> {selectedRestaurant.rating}
+                  <FaStar className="star" /> {stores[0].ratingAvg}
                 </p>
 
                 <div className="detail-tags">
