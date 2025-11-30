@@ -64,6 +64,7 @@ export default function HomeScreen() {
     {
       id: 1,
       name: "On-tatteut Sotbap",
+      storeId: "692960884b39f58aadb4079f",
       distance: "235m",
       img: "/img/food.jpg",
       rating: 4.7,
@@ -83,6 +84,7 @@ export default function HomeScreen() {
     {
       id: 2,
       name: "Jongno Noodle House",
+      storeId: "68de5ecfc695e985509bd75d",
       distance: "190m",
       img: "/img/noodle.jpg",
       rating: 4.4,
@@ -237,7 +239,7 @@ export default function HomeScreen() {
           </>
         )}
 
-
+        
         {/* --- MY PAGE --- */}
         {page === "my" && (
           <div className="my-screen">
@@ -488,13 +490,21 @@ export default function HomeScreen() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; OpenStreetMap contributors"
               />
-              {restaurants.map((r) => (
-                <Marker key={r.id} position={[r.lat, r.lng]}>
-                  <Popup>
-                    {r.name} <br /> {r.address}
-                  </Popup>
-                </Marker>
-              ))}
+              {restaurants.map(r => {
+                const store = stores.find(s => String(s.id) === String(r.storeId));
+
+                return (
+                  <Marker 
+                    key={r.id} 
+                    position={[r.lat, r.lng]}
+                  >
+                    <Popup>
+                      {store ? store.name : r.name} <br /> {store? store.address : r.address}
+                    </Popup>
+                  </Marker>
+                );
+              })}
+
             </MapContainer>
           </div>
         )}
