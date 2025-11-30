@@ -21,6 +21,7 @@ function App() {
         <Route path="/complete" element={<Complete />} />
         <Route path="/home" element={<HomeScreen />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+    
       </Routes>
     </BrowserRouter>
   )
