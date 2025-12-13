@@ -23,6 +23,14 @@ L.Icon.Default.mergeOptions({
 
 
 export default function HomeScreen() {
+  const getStoreByRestaurant = (restaurant) => {
+  return stores.find(
+    (s) => String(s.id) === String(restaurant.storeId)
+  );
+};
+
+
+
   const [comments] = useState([
     { id: 1, nation: "USA", user: "Kim", text: "It was so delicious that I want to visit again next time." },
     { id: 2, nation: "USA", user: "Tim", text: "The bossam set was so amazing !" },
@@ -180,7 +188,10 @@ export default function HomeScreen() {
                 }}
               >
                 <div className="restaurant-left">
-                  <span className="name">{stores[0]?.name ?? '가게 이름 없음'}</span>
+                  <span className="name">
+  {getStoreByRestaurant(restaurants[0])?.name ?? restaurants[0].name}
+</span>
+
                   <span className="distance">235m</span>
                 </div>
 
@@ -272,43 +283,60 @@ export default function HomeScreen() {
             </div>
 
             {myTab === "visits" && (
-              <div className="my-visits-list">
-                {restaurants.map((r) => (
-                  <div
-                    key={r.id}
-                    className="my-visit-item"
-                    onClick={() => {
-                      setPrevPage("my");
-                      setSelectedRestaurant(r);
-                      setPage("detail");
-                    }}
-                  >
-                    <img src={r.img} alt={stores[0].name} className="visit-img" />
+  <div className="my-visits-list">
+    {restaurants.map((r) => {
+      const store = getStoreByRestaurant(r);
 
-                    <div className="visit-info">
-                      <div className="visit-title-row">
-                        <span className="visit-name">{stores[0].name}</span>
-                        <span className="visit-distance">{r.distance}</span>
-                      </div>
+      return (
+        <div
+          key={r.id}
+          className="my-visit-item"
+          onClick={() => {
+            setPrevPage("my");
+            setSelectedRestaurant(r);
+            setPage("detail");
+          }}
+        >
+          <img
+            src={r.img}
+            alt={store?.name ?? r.name}
+            className="visit-img"
+          />
 
-                      <div className="visit-rating-row">⭐ {r.rating}</div>
-                    </div>
+          <div className="visit-info">
+            <div className="visit-title-row">
+              <span className="visit-name">
+                {store?.name ?? r.name}
+              </span>
+              <span className="visit-distance">
+                {r.distance}
+              </span>
+            </div>
 
-                    <div className="visit-like-btn">
-                      <FaHeart
-                        className={
-                          likedList.find((x) => x.id === r.id) ? "heart liked" : "heart"
-                        }
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toggleLike(r);
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="visit-rating-row">
+              ⭐ {store?.ratingAvg ?? r.rating}
+            </div>
+          </div>
+
+          <div className="visit-like-btn">
+            <FaHeart
+              className={
+                likedList.find((x) => x.id === r.id)
+                  ? "heart liked"
+                  : "heart"
+              }
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleLike(r);
+              }}
+            />
+          </div>
+        </div>
+      );
+    })}
+  </div>
+)}
+
 
             {myTab === "reviews" && (
               <div className="my-reviews-list">
@@ -394,11 +422,15 @@ export default function HomeScreen() {
               </div>
 
               <div className="detail-body">
-                <h2 className="detail-name">{stores[0].name}</h2>
+                <h2 className="detail-name">
+  {getStoreByRestaurant(selectedRestaurant)?.name ?? selectedRestaurant.name}
+</h2>
 
-                <p className="detail-rating">
-                  <FaStar className="star" /> {stores[0].ratingAvg}
-                </p>
+<p className="detail-rating">
+  <FaStar className="star" />
+  {getStoreByRestaurant(selectedRestaurant)?.ratingAvg ?? "-"}
+</p>
+
 
                 <div className="detail-tags">
                   {selectedRestaurant.tags.map((t, i) => (
