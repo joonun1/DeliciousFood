@@ -23,14 +23,6 @@ L.Icon.Default.mergeOptions({
 
 
 export default function HomeScreen() {
-  const getStoreByRestaurant = (restaurant) => {
-  return stores.find(
-    (s) => String(s.id) === String(restaurant.storeId)
-  );
-};
-
-
-
   const [comments] = useState([
     { id: 1, nation: "USA", user: "Kim", text: "It was so delicious that I want to visit again next time." },
     { id: 2, nation: "USA", user: "Tim", text: "The bossam set was so amazing !" },
@@ -41,6 +33,8 @@ export default function HomeScreen() {
   const [showDropdown, setShowDropdown] = useState(false);
   const locations = ["Anguk", "Seoul", "Busan", "Daegu"];
   const [liked, setLiked] = useState(false);
+
+
   
 
   const [prevPage, setPrevPage] = useState("home");
@@ -59,55 +53,77 @@ export default function HomeScreen() {
   useEffect(() => {
   async function fetchStores() {
     try {
-      const storeIds = ["692960884b39f58aadb4079f", "68de5ecfc695e985509bd75d"];
+      const storeIds = ["692d29af680d3fcbc9cac55f", "69304a2322d0f3cb9952d621"];
       const results = await Promise.all(storeIds.map(id => api.getStore(id)));
       setStores(results); // 배열에 모든 식당 저장
+      console.log("API STORE RAW:", results);
+
     } catch (err) {
       console.error("❌ GET 호출 실패:", err.message);
     }
+    
   }
   fetchStores();
 }, []);
-  const restaurants = [
-    {
-      id: 1,
-      name: "On-tatteut Sotbap",
-      storeId: "692960884b39f58aadb4079f",
-      distance: "235m",
-      img: "/img/food.jpg",
-      rating: 4.7,
-      phone: "02-123-4567",
-      hours: "11:30 - 21:00",
-      address: "12-3, Anguk-ro, Seoul",
-      likedCount: "4.4K",
-      tags: ["Local Pick", "Pork", "Preference 98%"],
-      reviews: [
-        { id: 1, user: "Tom", text: "It was so good, friendly staff!" },
-        { id: 2, user: "Yuna", text: "Very local vibe and delicious food." },
-      ],
-      // 예시 좌표 (Anguk 근처)
-      lat: 37.57, 
-      lng: 126.98
-    },
-    {
-      id: 2,
-      name: "Jongno Noodle House",
-      storeId: "68de5ecfc695e985509bd75d",
-      distance: "190m",
-      img: "/img/noodle.jpg",
-      rating: 4.4,
-      phone: "02-987-6543",
-      hours: "10:00 - 21:30",
-      address: "12 Jongno-gu, Seoul",
-      likedCount: "2.8K",
-      tags: ["Udon", "Tempura", "Local Favorite"],
-      reviews: [{ id: 1, user: "Chris", text: "Best noodles I've had!" }],
-      lat: 37.572,
-      lng: 126.991
-    },
-  ];
 
-  const [likedList, setLikedList] = useState(restaurants);
+const displayStores = stores.map((s, index) => ({
+  id: String(s.id),
+  name: s.name,
+  img: s.img ?? (index === 0 ? "/img/food.jpg" : "/img/noodle.jpg"),
+  rating: s.rating,
+  ratingCount: s.ratingCount,
+  phone: s.phone,
+  hours: s.hours,
+  address: s.address,
+  likedCount: s.likedCount,
+  tags: s.tags ?? [],
+  lat: index === 0 ? 37.57 : 37.572,
+  lng: index === 0 ? 126.98 : 126.991,
+  reviews: [],
+}));
+
+
+  //  const restaurants = [
+  //   {
+  //     id: 1,
+  //     name: "On-tatteut Sotbap",
+  //     storeId: "692960884b39f58aadb4079f",
+  //     distance: "235m",
+  //     img: "/img/food.jpg",
+  //     rating: 4.7,
+  //     phone: "02-123-4567",
+  //     hours: "11:30 - 21:00",
+  //     address: "12-3, Anguk-ro, Seoul",
+  //     likedCount: "4.4K",
+  //     tags: ["Local Pick", "Pork", "Preference 98%"],
+  //     reviews: [
+  //       { id: 1, user: "Tom", text: "It was so good, friendly staff!" },
+  //       { id: 2, user: "Yuna", text: "Very local vibe and delicious food." },
+  //     ],
+  //     // 예시 좌표 (Anguk 근처)
+  //     lat: 37.57, 
+  //     lng: 126.98
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Jongno Noodle House",
+  //     storeId: "68de5ecfc695e985509bd75d",
+  //     distance: "190m",
+  //     img: "/img/noodle.jpg",
+  //     rating: 4.4,
+  //     phone: "02-987-6543",
+  //     hours: "10:00 - 21:30",
+  //     address: "12 Jongno-gu, Seoul",
+  //     likedCount: "2.8K",
+  //     tags: ["Udon", "Tempura", "Local Favorite"],
+  //     reviews: [{ id: 1, user: "Chris", text: "Best noodles I've had!" }],
+  //     lat: 37.572,
+  //     lng: 126.991
+  //   },
+  // ];
+
+ const [likedList, setLikedList] = useState([]);
+
 
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter" && query.trim()) {
@@ -119,13 +135,14 @@ export default function HomeScreen() {
     }
   };
 
-  const toggleLike = (r) => {
-    if (likedList.find((x) => x.id === r.id)) {
-      setLikedList(likedList.filter((x) => x.id !== r.id));
-    } else {
-      setLikedList([...likedList, r]);
-    }
-  };
+  const toggleLike = (store) => {
+  if (likedList.find((x) => x.id === store.id)) {
+    setLikedList(likedList.filter((x) => x.id !== store.id));
+  } else {
+    setLikedList([...likedList, store]);
+  }
+};
+
 
   return (
     <div className="page-root">
@@ -183,26 +200,37 @@ export default function HomeScreen() {
                 className="restaurant-info"
                 onClick={() => {
                   setPrevPage("home");
-                  setSelectedRestaurant(restaurants[0]);
+                  if (displayStores.length === 0) return;
+                  setSelectedRestaurant(displayStores[0]);
                   setPage("detail");
                 }}
               >
                 <div className="restaurant-left">
-                  <span className="name">
-  {getStoreByRestaurant(restaurants[0])?.name ?? restaurants[0].name}
-</span>
+  {displayStores.length > 0 && (
+    <span className="name">
+      {displayStores[0]?.name}
+    </span>
+  )}
 
-                  <span className="distance">235m</span>
-                </div>
+  {displayStores.length > 0 && (
+    <span className="distance">
+      {/* distance가 API에 없으면 일단 고정 or 계산 */}
+      235m
+    </span>
+  )}
+</div>
+
 
                 <button
-                  className={`like-btn ${liked ? "liked" : ""}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLiked(!liked);
-                    toggleLike(restaurants[0]);
-                  }}
-                >
+  className={`like-btn ${
+    likedList.find((x) => x.id === displayStores[0]?.id) ? "liked" : ""
+  }`}
+  onClick={(e) => {
+    e.stopPropagation();
+    toggleLike(displayStores[0]);
+  }}
+>
+
                   <FaHeart />
                 </button>
               </div>
@@ -284,8 +312,8 @@ export default function HomeScreen() {
 
             {myTab === "visits" && (
   <div className="my-visits-list">
-    {restaurants.map((r) => {
-      const store = getStoreByRestaurant(r);
+    {displayStores.map((r) => {
+      const isLiked = likedList.some((x) => x.id === r.id);
 
       return (
         <div
@@ -297,39 +325,31 @@ export default function HomeScreen() {
             setPage("detail");
           }}
         >
+          {/* 식당 이미지 */}
           <img
             src={r.img}
-            alt={store?.name ?? r.name}
+            alt={r.name}
             className="visit-img"
           />
 
+          {/* 식당 정보 */}
           <div className="visit-info">
             <div className="visit-title-row">
-              <span className="visit-name">
-                {store?.name ?? r.name}
-              </span>
-              <span className="visit-distance">
-                {r.distance}
-              </span>
+              <span className="visit-name">{r.name}</span>
+
+              {/* ❤️ 좋아요 버튼 */}
+              <FaHeart
+                className={isLiked ? "heart liked" : "heart"}
+                onClick={(e) => {
+                  e.stopPropagation(); // 카드 클릭 방지
+                  toggleLike(r);
+                }}
+              />
             </div>
 
             <div className="visit-rating-row">
-              ⭐ {store?.ratingAvg ?? r.rating}
+              ⭐ {r.ratingAvg ?? r.rating ?? 0}
             </div>
-          </div>
-
-          <div className="visit-like-btn">
-            <FaHeart
-              className={
-                likedList.find((x) => x.id === r.id)
-                  ? "heart liked"
-                  : "heart"
-              }
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleLike(r);
-              }}
-            />
           </div>
         </div>
       );
@@ -338,30 +358,14 @@ export default function HomeScreen() {
 )}
 
 
+
             {myTab === "reviews" && (
-              <div className="my-reviews-list">
-                {restaurants.map((r) =>
-                  r.reviews.map((rev) => (
-                    <div key={rev.id} className="review-item">
-                      <div className="review-header">
-                        <span className="review-user">{rev.user}</span>
-                        <span className="review-date">24.10.27</span>
-                      </div>
-
-                      <div className="review-stars">⭐⭐⭐⭐⭐</div>
-
-                      <div className="review-images-row">
-                        <img src={r.img} className="review-img" />
-                        <img src={r.img} className="review-img" />
-                        <img src={r.img} className="review-img" />
-                      </div>
-
-                      <p className="review-text">{rev.text}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-            )}
+  <div className="my-reviews-list">
+    <div className="recent-empty">
+      Reviews will be available soon.
+    </div>
+  </div>
+)}
 
             {myTab === "recent" && (
               <div className="recent-empty">No recent activity.</div>
@@ -389,7 +393,7 @@ export default function HomeScreen() {
                   <img src={r.img} alt={stores[0]?.name} />
                   <div className="liked-info">
                     <p className="liked-name">{r.name}</p>
-                    <p className="liked-distance">{r.distance}</p>
+                  <p className="liked-distance">Nearby</p>
                   </div>
                 </div>
               ))}
@@ -423,15 +427,13 @@ export default function HomeScreen() {
 
               <div className="detail-body">
                 <h2 className="detail-name">
-  {getStoreByRestaurant(selectedRestaurant)?.name ?? selectedRestaurant.name}
+  {selectedRestaurant.name}
 </h2>
 
-<p className="detail-rating">
-  <FaStar className="star" />
-  {getStoreByRestaurant(selectedRestaurant)?.ratingAvg ?? "-"}
-</p>
-
-
+                <p className="detail-rating">
+                  <FaStar className="star" />
+                  {selectedRestaurant.rating ?? "-"}
+                </p>
                 <div className="detail-tags">
                   {selectedRestaurant.tags.map((t, i) => (
                     <span key={i}>#{t}</span>
@@ -457,7 +459,7 @@ export default function HomeScreen() {
                     <span>Menu</span>
                   </div>
 
-                  {selectedRestaurant.reviews.slice(0, 1).map((rev) => (
+                  {selectedRestaurant.reviews?.slice(0, 1).map((rev) => (
                     <div key={rev.id} className="review-item">
                       <div className="review-header">
                         <span className="review-user">{rev.user}</span>
@@ -498,7 +500,7 @@ export default function HomeScreen() {
 
             <h2 className="detail-review-title">Reviews</h2>
 
-            {selectedRestaurant.reviews.map((rev) => (
+            {selectedRestaurant.reviews?.map((rev) => (
               <div key={rev.id} className="review-item">
                 <div className="review-header">
                   <span className="review-user">{rev.user}</span>
@@ -522,20 +524,18 @@ export default function HomeScreen() {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; OpenStreetMap contributors"
               />
-              {restaurants.map(r => {
-                const store = stores.find(s => String(s.id) === String(r.storeId));
+              {displayStores.map((s) => (
+  <Marker
+    key={s.id}
+    position={[s.lat, s.lng]}
+  >
+    <Popup>
+      {s.name} <br />
+      {s.address}
+    </Popup>
+  </Marker>
+))}
 
-                return (
-                  <Marker 
-                    key={r.id} 
-                    position={[r.lat, r.lng]}
-                  >
-                    <Popup>
-                      {store ? store.name : r.name} <br /> {store? store.address : r.address}
-                    </Popup>
-                  </Marker>
-                );
-              })}
 
             </MapContainer>
           </div>

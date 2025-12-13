@@ -1086,6 +1086,7 @@ html, body {
   gap: 12px;
   align-items: center;
   cursor: pointer;
+  position: relative;
 }
 
 .visit-img {
@@ -1119,14 +1120,25 @@ html, body {
   color: #f4c22b;
 }
 
-/* Like 하트 */
-.visit-like-btn .heart {
-  color: #777;
+.heart {
+  font-size: 18px;
+  color: #bbb;           /* 기본 회색 */
   cursor: pointer;
+  transition: color 0.2s ease, transform 0.1s ease;
+  flex-shrink: 0;
+}
+.heart-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.visit-like-btn .heart.liked {
-  color: red;
+.heart.liked {
+  color: #ff3b3b;        /* ❤️ 빨간색 */
+}
+
+.heart:active {
+  transform: scale(1.15);
 }
 
 /* ==== Review 이미지 3장 가로 정렬(컨테이너 밖으로 안나가게) ==== */
