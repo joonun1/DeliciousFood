@@ -45,6 +45,43 @@ export default function HomeScreen() {
   const [query, setQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState([]);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+  const [myLocation, setMyLocation] = useState(null);
+
+  useEffect(() => {
+  if (!navigator.geolocation) {
+    console.error("Geolocation not supported");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      setMyLocation({
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+      });
+    },
+    (err) => {
+      console.error("❌ 위치 가져오기 실패:", err.message);
+    }
+  );
+}, []);
+
+
+function getDistanceInMeters(lat1, lng1, lat2, lng2) {
+  const R = 6371000; // 지구 반지름 (m)
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Math.round(R * c); // meter
+}
 
 
   const [stores, setStores] = useState([]);
@@ -66,21 +103,37 @@ export default function HomeScreen() {
   fetchStores();
 }, []);
 
-const displayStores = stores.map((s, index) => ({
-  id: String(s.id),
-  name: s.name,
-  img: s.img ?? (index === 0 ? "/img/food.jpg" : "/img/noodle.jpg"),
-  rating: s.rating,
-  ratingCount: s.ratingCount,
-  phone: s.phone,
-  hours: s.hours,
-  address: s.address,
-  likedCount: s.likedCount,
-  tags: s.tags ?? [],
-  lat: index === 0 ? 37.57 : 37.572,
-  lng: index === 0 ? 126.98 : 126.991,
-  reviews: [],
-}));
+const displayStores = stores
+  .filter((s) => s.lat && s.lng)
+  .map((s, index) => {
+    const distance =
+      myLocation
+        ? getDistanceInMeters(
+            myLocation.lat,
+            myLocation.lng,
+            s.lat,
+            s.lng
+          )
+        : null;
+
+    return {
+      id: String(s.id),
+      name: s.name,
+      img: s.img ?? (index === 0 ? "/img/food.jpg" : "/img/noodle.jpg"),
+      rating: s.rating,
+      ratingCount: s.ratingCount,
+      phone: s.phone,
+      hours: s.hours,
+      address: s.address,
+      likedCount: s.likedCount,
+      tags: s.tags ?? [],
+      lat: s.lat,
+      lng: s.lng,
+      distance,   // ✅ 실제 거리
+      reviews: [],
+    };
+  });
+
 
 
   //  const restaurants = [
@@ -214,9 +267,11 @@ const displayStores = stores.map((s, index) => ({
 
   {displayStores.length > 0 && (
     <span className="distance">
-      {/* distance가 API에 없으면 일단 고정 or 계산 */}
-      235m
-    </span>
+  {displayStores[0]?.distance
+    ? `${displayStores[0].distance}m`
+    : "거리 계산 중"}
+</span>
+
   )}
 </div>
 
@@ -421,7 +476,12 @@ const displayStores = stores.map((s, index) => ({
                     ←
                   </button>
 
-                  <span className="detail-distance">{selectedRestaurant.distance}</span>
+                  <span className="detail-distance">
+                    {selectedRestaurant.distance
+                    ? `${selectedRestaurant.distance}m`
+                      : ""}
+                  </span>
+
                 </div>
               </div>
 
